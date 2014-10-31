@@ -29,7 +29,8 @@ orbit-heights = do
 thinstroke = ->
   this.style do
     fill : \none
-    stroke : d3.hcl planet-col .brighter 2
+    stroke : d3.hcl planet-col
+    "stroke-width" : 0.2
 
 orbit-circles = game-svg.select-all \.orbit-circle
   .data orbit-heights
