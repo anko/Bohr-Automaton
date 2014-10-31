@@ -11,3 +11,8 @@ css: main.css
 
 serve: all
 	cd static; $(WEBSERVER)
+
+watch: all
+	# Compile LiveScript files as they change
+	inotifywait --quiet -mr -e close_write --format "%f" client.ls |\
+	while read file; do make js; done;
