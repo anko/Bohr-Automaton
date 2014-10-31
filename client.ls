@@ -5,7 +5,7 @@ vector = require \vec2
 console.log "Hi, I'm alive."
 
 planet-col   = \cyan
-line-col     = \black
+line-col     = \gray
 creature-col = \#c91515
 charge-col   = \cyan
 
@@ -102,7 +102,7 @@ render = do
       -> # nothing
       (.remove!)
 
-    # Creatures
+    # Radially moving objects
     do
 
       creature-width  = 12
@@ -166,4 +166,4 @@ update = ->
 
 set-interval do
   update
-  1000
+  500
