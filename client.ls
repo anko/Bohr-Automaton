@@ -32,6 +32,7 @@ creatures =
     height : 1
   * angle  : 2
     height : 2
+    shape  : \up
 
 charges =
   * angle  : 5
@@ -105,8 +106,8 @@ render = do
     # Radially moving objects
     do
 
-      creature-width  = 12
-      creature-height = 12
+      creature-height = 7
+      creature-width  = 10
 
       reposition = (duration) ->
         ->
@@ -118,20 +119,28 @@ render = do
             "rotate(#{rad-to-deg angles[it.angle]})"
           target.select \.head .attr \transform "translate(#height)"
 
+      shapes = do
+        w = creature-width
+        h = creature-height
+        equals : "M0 0
+                  l#w 0
+                  M0 #h
+                  l#w 0"
+
       render-bind do
         \.creature creature-layer, creatures
         ->
           rotating-base = this.append \g
             ..attr class : \creature
           head = rotating-base.append \g
-            ..append \rect
+            ..attr class : \head
+            ..append \path
               .attr do
-                class : \head
-                width  : creature-width
-                height : creature-height
-                x : - creature-width / 2
-                y : - creature-height / 2
-              .style \fill creature-col
+                d : shapes[it.shape or \equals]
+                transform : "rotate(-90)translate(#{- creature-width/2},#{- creature-height/2})"
+              .style do
+                stroke : creature-col
+                "stroke-width" : 3
           rotating-base
             ..each reposition 0
         ->
