@@ -1,4 +1,5 @@
 require! d3
+{ join } = require \prelude-ls
 
 console.log "Hi, I'm alive."
 
@@ -6,6 +7,8 @@ planet-col = \#157fc9
 
 width  = 500px
 height = 500px
+
+rad-to-deg = (/ Math.PI * 180)
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -50,7 +53,7 @@ angle-lines = game-svg.select-all \.angle-line
     ..enter!
       .append \line
         ..call thinstroke
-          ..attr x2 : 0 y2 : 0
+          ..attr x2 : 0 y2 : 0 class : \angle-line
         ..transition!duration 500
           ..delay (_,i) -> i * 50
           ..attr do
@@ -60,3 +63,28 @@ angle-lines = game-svg.select-all \.angle-line
 
 planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
   .style fill : planet-col
+
+creatures =
+  * angle  : 0
+    height : 0
+  * angle  : 1
+    height : 1
+  * angle  : 2
+    height : 2
+
+radial-position = (height-index, angle-index) ->
+  [ orbit-heights[height-index] * Math.cos angles[angle-index]
+    orbit-heights[height-index] * Math.sin angles[angle-index] ]
+
+creature-elements = game-svg.select-all \.creature
+  ..data creatures
+    ..enter!
+      .append \g
+        ..attr do
+          class : \creature
+          transform : -> "translate(
+                        #{radial-position it.height, it.angle |> join \, }
+                        )
+                        rotate(25)"
+        ..append \rect .attr width : 10 height : 10
+    ..exit!remove!
