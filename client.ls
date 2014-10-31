@@ -4,9 +4,10 @@ vector = require \vec2
 
 console.log "Hi, I'm alive."
 
-planet-col = \#157fc9
+planet-col   = \cyan
+line-col     = \black
 creature-col = \#c91515
-charge-col = \cyan
+charge-col   = \cyan
 
 width  = 500px
 height = 500px
@@ -51,7 +52,7 @@ render = do
   thinstroke = ->
     this.style do
       fill : \none
-      stroke : d3.hcl planet-col
+      stroke : d3.hcl line-col
       "stroke-width" : 0.2
 
   # Encapsulate the D3 pattern of "enter, update, exit"
@@ -65,7 +66,6 @@ render = do
   # This is static, so we only need to append it once
   planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
     .style fill : planet-col
-
 
   # Return actual render method
   ->
@@ -149,7 +149,7 @@ render = do
           rotating-base
             ..each reposition 0
         ->
-          this.each reposition 300
+          this.each reposition 200
         (.remove!)
 
 render { +initial }
