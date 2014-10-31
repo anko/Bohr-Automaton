@@ -56,6 +56,11 @@ render = do
       ..call update
       ..exit!call exit
 
+  # This is static, so we only need to append it once
+  planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
+    .style fill : planet-col
+
+
   # Return actual render method
   ->
     orbit-circles = render-bind do
@@ -82,9 +87,6 @@ render = do
             y2 : -> (10 + max-orbit-r) * Math.sin it
       -> # nothing
       (.remove!)
-
-    planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
-      .style fill : planet-col
 
     creature-elements = do
 
