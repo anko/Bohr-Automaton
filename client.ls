@@ -30,6 +30,7 @@ creatures =
     height : 0
   * angle  : 1
     height : 1
+    shape  : \down
   * angle  : 2
     height : 2
     shape  : \up
@@ -106,7 +107,7 @@ render = do
     # Radially moving objects
     do
 
-      creature-height = 7
+      creature-height = 10
       creature-width  = 10
 
       reposition = (duration) ->
@@ -119,13 +120,41 @@ render = do
             "rotate(#{rad-to-deg angles[it.angle]})"
           target.select \.head .attr \transform "translate(#height)"
 
-      shapes = do
+      shape = ->
+        console.log it
         w = creature-width
         h = creature-height
-        equals : "M0 0
-                  l#w 0
-                  M0 #h
-                  l#w 0"
+        switch (it.shape or \equals)
+        | \equals =>
+          d3.select this
+            .attr d : "M0 0
+                       L#w 0
+                       L#w #h
+                       L0 #h
+                       z"
+            .style do
+              fill : creature-col
+              stroke : \none
+        | \up =>
+          d3.select this
+            .attr d : "M#{w/2} 0
+                       L#w #h
+                       L#{w/2} #{h * 0.8}
+                       L0 #h
+                       z"
+            .style do
+              fill : creature-col
+              stroke : \none
+        | \down =>
+          d3.select this
+            .attr d : "M#{w/2} #h
+                       L#w 0
+                       L#{w/2} #{h * 0.2}
+                       L0 0
+                       z"
+            .style do
+              fill : creature-col
+              stroke : \none
 
       render-bind do
         \.creature creature-layer, creatures
@@ -136,11 +165,8 @@ render = do
             ..attr class : \head
             ..append \path
               .attr do
-                d : shapes[it.shape or \equals]
-                transform : "rotate(-90)translate(#{- creature-width/2},#{- creature-height/2})"
-              .style do
-                stroke : creature-col
-                "stroke-width" : 3
+                transform : "rotate(90)translate(#{- creature-width/2},#{- creature-height/2})"
+              .each shape
           rotating-base
             ..each reposition 0
         ->
