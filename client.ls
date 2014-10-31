@@ -97,14 +97,21 @@ render = do
       creature-width  = 12
       creature-height = 12
 
+      reposition = (duration) ->
+        ->
+          { x, y } = radial-position it.height, it.angle
+          target = d3.select this
+          if duration then
+            target := target.transition!duration duration
+          target .attr do
+            \transform
+            "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
+
       render-bind do
         \.creature creatures
         -> this.append \g
-          ..attr do
-            class : \creature
-            transform : ->
-              { x, y } = radial-position it.height, it.angle
-              "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
+          ..attr class : \creature
+          ..each reposition 0
           ..append \rect
             .attr do
               width  : creature-width
@@ -112,7 +119,16 @@ render = do
               x : - creature-width / 2
               y : - creature-height / 2
             .style \fill creature-col
-        -> # nothing
+        ->
+          this.each reposition 100
         (.remove!)
 
 render { +initial }
+
+update = ->
+  creatures.map -> it.angle = (it.angle + 1) % angles.length
+  render!
+
+set-interval do
+  update
+  1000
