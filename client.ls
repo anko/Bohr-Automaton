@@ -100,20 +100,25 @@ render = do
           if duration then target := target.transition!duration duration
           target .attr do
             \transform
-            "rotate(#{rad-to-deg angles[it.angle]})translate(#height)"
+            "rotate(#{rad-to-deg angles[it.angle]})"
+          target.select \.head .attr \transform "translate(#height)"
 
       render-bind do
         \.creature creatures
-        -> this.append \g
-          ..attr class : \creature
-          ..each reposition 0
-          ..append \rect
-            .attr do
-              width  : creature-width
-              height : creature-height
-              x : - creature-width / 2
-              y : - creature-height / 2
-            .style \fill creature-col
+        ->
+          rotating-base = this.append \g
+            ..attr class : \creature
+          head = rotating-base.append \g
+            ..append \rect
+              .attr do
+                class : \head
+                width  : creature-width
+                height : creature-height
+                x : - creature-width / 2
+                y : - creature-height / 2
+              .style \fill creature-col
+          rotating-base
+            ..each reposition 0
         ->
           this.each reposition 300
         (.remove!)
