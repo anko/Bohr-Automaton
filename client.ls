@@ -6,6 +6,7 @@ console.log "Hi, I'm alive."
 
 planet-col = \#157fc9
 creature-col = \#c91515
+charge-col = \cyan
 
 width  = 500px
 height = 500px
@@ -30,6 +31,11 @@ creatures =
     height : 1
   * angle  : 2
     height : 2
+
+charges =
+  * angle  : 5
+    height : 0
+  ...
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -126,10 +132,30 @@ render = do
           this.each reposition 300
         (.remove!)
 
+      render-bind do
+        \.charge charges
+        ->
+          rotating-base = this.append \g
+            ..attr class : \charge
+          head = rotating-base.append \g
+            ..append \rect
+              .attr do
+                class : \head
+                width  : creature-width
+                height : creature-height
+                x : - creature-width / 2
+                y : - creature-height / 2
+              .style \fill charge-col
+          rotating-base
+            ..each reposition 0
+        ->
+          this.each reposition 300
+        (.remove!)
+
 render { +initial }
 
 update = ->
-  creatures.map -> it.angle = (it.angle + 1) % angles.length
+  charges.map -> it.angle = (it.angle + 1) % angles.length
   render!
 
 set-interval do
