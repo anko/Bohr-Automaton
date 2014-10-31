@@ -90,22 +90,17 @@ render = do
 
     creature-elements = do
 
-      radial-position = (height-index, angle-index) ->
-        vector orbit-heights[height-index], 0
-          .rotate angles[angle-index]
-
       creature-width  = 12
       creature-height = 12
 
       reposition = (duration) ->
         ->
-          { x, y } = radial-position it.height, it.angle
+          height = orbit-heights[it.height]
           target = d3.select this
-          if duration then
-            target := target.transition!duration duration
+          if duration then target := target.transition!duration duration
           target .attr do
             \transform
-            "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
+            "rotate(#{rad-to-deg angles[it.angle]})translate(#height)"
 
       render-bind do
         \.creature creatures
@@ -120,7 +115,7 @@ render = do
               y : - creature-height / 2
             .style \fill creature-col
         ->
-          this.each reposition 100
+          this.each reposition 300
         (.remove!)
 
 render { +initial }
