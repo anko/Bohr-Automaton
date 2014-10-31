@@ -57,21 +57,27 @@ render = do
 
   # Encapsulate the D3 pattern of "enter, update, exit"
   # See [here](http://bost.ocks.org/mike/join/) for more on that.
-  render-bind = (selector, data, enter, update, exit) ->
-    base = game-svg.select-all selector .data data
+  render-bind = (selector, layer, data, enter, update, exit) ->
+    base = layer.select-all selector .data data
       ..enter!call enter
       ..call update
       ..exit!call exit
 
+  # Enforce stacking order
+  lines-layer    = game-svg.append \g
+  creature-layer = game-svg.append \g
+  charge-layer   = game-svg.append \g
+  planet-layer   = game-svg.append \g
+
   # This is static, so we only need to append it once
-  planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
+  planet = planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
     .style fill : planet-col
 
   # Return actual render method
   ->
     # Orbit circles
     render-bind do
-      \.orbit-circle orbit-heights
+      \.orbit-circle lines-layer, orbit-heights
       -> this .append \circle
         ..attr r : 0 class : \orbit-circle
         ..call thinstroke
@@ -84,7 +90,7 @@ render = do
 
     # Sector lines (at angles)
     render-bind do
-      \.angle-line angles
+      \.angle-line lines-layer, angles
       -> this.append \line
         ..call thinstroke
           ..attr x2 : 0 y2 : 0 class : \angle-line
@@ -113,7 +119,7 @@ render = do
           target.select \.head .attr \transform "translate(#height)"
 
       render-bind do
-        \.creature creatures
+        \.creature creature-layer, creatures
         ->
           rotating-base = this.append \g
             ..attr class : \creature
@@ -133,7 +139,7 @@ render = do
         (.remove!)
 
       render-bind do
-        \.charge charges
+        \.charge charge-layer, charges
         ->
           rotating-base = this.append \g
             ..attr class : \charge
