@@ -86,29 +86,31 @@ render = do
     planet = game-svg.append \circle .attr cx : 0 cy : 0 r : 25
       .style fill : planet-col
 
-    radial-position = (height-index, angle-index) ->
-      vector orbit-heights[height-index], 0
-        .rotate angles[angle-index]
+    creature-elements = do
 
-    creature-width  = 12
-    creature-height = 12
+      radial-position = (height-index, angle-index) ->
+        vector orbit-heights[height-index], 0
+          .rotate angles[angle-index]
 
-    creature-elements = render-bind do
-      \.creature creatures
-      -> this.append \g
-        ..attr do
-          class : \creature
-          transform : ->
-            { x, y } = radial-position it.height, it.angle
-            "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
-        ..append \rect
-          .attr do
-            width  : creature-width
-            height : creature-height
-            x : - creature-width / 2
-            y : - creature-height / 2
-          .style \fill creature-col
-      -> # nothing
-      (.remove!)
+      creature-width  = 12
+      creature-height = 12
+
+      render-bind do
+        \.creature creatures
+        -> this.append \g
+          ..attr do
+            class : \creature
+            transform : ->
+              { x, y } = radial-position it.height, it.angle
+              "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
+          ..append \rect
+            .attr do
+              width  : creature-width
+              height : creature-height
+              x : - creature-width / 2
+              y : - creature-height / 2
+            .style \fill creature-col
+        -> # nothing
+        (.remove!)
 
 render { +initial }
