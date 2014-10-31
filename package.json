@@ -1,0 +1,20 @@
+{
+  "name": "gamejam-anko",
+  "version": "1.0.0",
+  "description": "GDSE Anniversary GameJam 2014. Themes: Explosions, HYPER-challenging, Heights, Automation, Destroy",
+  "main": "static/bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "make all"
+  },
+  "author": "An <an@cyan.io>",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^6.2.0",
+    "d3": "^3.4.13",
+    "liveify": "^1.3.1",
+    "myth": "^1.2.1",
+    "whatxml": "0.0.2"
+  }
+}
