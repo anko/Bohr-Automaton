@@ -2,13 +2,18 @@
 
 *Theme: Explosions, HYPER-challenging, Heights, Automation, Destroy*
 
-If you want to hack and compile, you'll need [Node.js](http://nodejs.org/).
-Just run `npm install` in the root of this project. That will install all
-dependencies and compile the game into `static/`.
+I'll put a compiled version up somewhere, sometime.
 
-If you just want to get the compiled version, I guess I'll have a release ZIP
-somewhere maybe later and a version online for someone to play eventually maybe
-if I have time!
+## Building / hacking
+
+If you want to hack and compile it yourself, you'll need
+[Node.js](http://nodejs.org/).  Just run `npm install` in the root of this
+project to install all dependencies into `node_modules` (don't worry, there are
+no system-level dependencies other than Node) and compile the game into
+`static/`. (Running `make all` is equivalent.)
+
+Then run a web server in `static` and point your browser at it.
+
 
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
