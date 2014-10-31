@@ -63,7 +63,8 @@ render = do
 
   # Return actual render method
   ->
-    orbit-circles = render-bind do
+    # Orbit circles
+    render-bind do
       \.orbit-circle orbit-heights
       -> this .append \circle
         ..attr r : 0 class : \orbit-circle
@@ -75,7 +76,8 @@ render = do
       -> # nothing
       (.remove!)
 
-    angle-lines = render-bind do
+    # Sector lines (at angles)
+    render-bind do
       \.angle-line angles
       -> this.append \line
         ..call thinstroke
@@ -88,7 +90,8 @@ render = do
       -> # nothing
       (.remove!)
 
-    creature-elements = do
+    # Creatures
+    do
 
       creature-width  = 12
       creature-height = 12
