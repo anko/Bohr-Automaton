@@ -1,9 +1,11 @@
 require! d3
+vector = require \vec2
 { join } = require \prelude-ls
 
 console.log "Hi, I'm alive."
 
 planet-col = \#157fc9
+creature-col = \#c91515
 
 width  = 500px
 height = 500px
@@ -73,8 +75,11 @@ creatures =
     height : 2
 
 radial-position = (height-index, angle-index) ->
-  [ orbit-heights[height-index] * Math.cos angles[angle-index]
-    orbit-heights[height-index] * Math.sin angles[angle-index] ]
+  vector orbit-heights[height-index], 0
+    .rotate angles[angle-index]
+
+creature-width  = 12
+creature-height = 12
 
 creature-elements = game-svg.select-all \.creature
   ..data creatures
@@ -82,9 +87,14 @@ creature-elements = game-svg.select-all \.creature
       .append \g
         ..attr do
           class : \creature
-          transform : -> "translate(
-                        #{radial-position it.height, it.angle |> join \, }
-                        )
-                        rotate(25)"
-        ..append \rect .attr width : 10 height : 10
+          transform : ->
+            { x, y } = radial-position it.height, it.angle
+            "translate(#x,#y)rotate(#{rad-to-deg angles[it.angle]})"
+        ..append \rect
+          .attr do
+            width  : creature-width
+            height : creature-height
+            x : - creature-width / 2
+            y : - creature-height / 2
+          .style \fill creature-col
     ..exit!remove!
