@@ -142,10 +142,13 @@ render = do
     drag-state =
       ok-positions : []
       best-pos     : null
+      initial-pos  : null
 
     d3.behavior.drag!
       .on \dragstart ->
         console.log "DRAGSTART" it
+
+
         drag-state.ok-positions := find-possible-positions it.id
           ..for-each (pos) ->
             { x, y } = find-coordinates pos.angle, pos.height
@@ -159,6 +162,14 @@ render = do
         drag-layer.append \circle
           .attr cx : 0, cy : 0, r : 15 id : \target-indicator
           .style display : \none fill : drag-target-col, opacity : 0.2
+        { x : initial-x, y : initial-y } = find-coordinates it.angle, it.height
+        drag-layer.append \line
+          .attr x1 : initial-x, y1 : initial-y, id : \target-indicator-line
+          .style do
+            display : \none
+            stroke : drag-target-col
+            "stroke-dasharray" : "2 2"
+
       .on \drag ->
         drag-state.best-pos = minimum-by do
           ->
@@ -171,6 +182,10 @@ render = do
         game-svg.select \#target-indicator
           .attr transform : "translate(#x,#y)"
           .style display : \block
+        game-svg.select \#target-indicator-line
+          .attr x2 : x, y2 : y
+          .style display : \block
+
       .on \dragend ->
         { best-pos } = drag-state
         console.log "DRAGEND" it
@@ -181,6 +196,10 @@ render = do
           .transition!duration 200
           .ease \circle-in
           .attr r : 0
+          .remove!
+        drag-layer.select-all "line"
+          .transition!duration 200
+          .style "stroke-width" 0
           .remove!
 
   # This is static, so we only need to append it once
