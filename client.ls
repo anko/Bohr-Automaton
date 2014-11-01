@@ -148,9 +148,6 @@ render = do
 
     d3.behavior.drag!
       .on \dragstart ->
-        console.log "DRAGSTART" it
-
-
         drag-state.ok-positions := find-possible-positions it.id
           ..for-each (pos) ->
             { x, y } = find-coordinates pos.angle, pos.height
@@ -190,8 +187,6 @@ render = do
 
       .on \dragend ->
         { best-pos } = drag-state
-        console.log "DRAGEND" it
-        console.log best-pos
         it <<< best-pos
         render { +allow-drag }
         drag-layer.select-all "circle"
