@@ -14,7 +14,7 @@ charge-bg-col = d3.hsl charge-col
   ..l = 0.95
 drag-target-col = \orange
 
-update-time-step = 1000ms
+update-time-step = 500ms
 
 width  = 500px
 height = 500px
@@ -72,6 +72,8 @@ game-svg = d3.select \body .select \#game
   .attr { width, height }
   .append \g
   .attr transform : "translate(#{width/2},#{height/2})rotate(-90)"
+
+var start-action, stop-action
 
 render = do
 
@@ -211,6 +213,14 @@ render = do
     # Main planet
     planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
       .style fill : planet-col
+      .on \click -> start-action!
+      .on \mouseover ->
+        d3.select this .style do
+          fill : do
+            d3.hsl planet-col .brighter 0.5
+      .on \mouseout ->
+        d3.select this .style do
+          fill : planet-col
 
   # Return actual render method
   (options={}) ->
