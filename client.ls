@@ -14,8 +14,6 @@ charge-bg-col = d3.hsl charge-col
   ..l = 0.95
 drag-target-col = \orange
 
-update-time-step = 500ms
-
 width  = 500px
 height = 500px
 
@@ -53,19 +51,18 @@ levels =
       * charge 4 2
   ...
 
-creatures = []
-charges   = []
-
-current-level = 0
+game =
+  level : 0
+  state : \none # Possible: running, win-screen, none
+  creatures : []
+  charges   : []
+  update-time-step : 500ms
 
 change-level = (n) ->
   level = levels[n]
-  { creatures, charges } := level
+  game{creatures, charges} := level
 
-change-level current-level
-
-# Possible: running, win-screen, none
-game-state = \none
+change-level game.level
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -120,11 +117,11 @@ render = do
     creature-at-position = (angle, height) ->
       find do
         -> it.angle is angle and it.height is height
-        creatures
+        game.creatures
     charge-at-position = (angle, height) ->
       find do
         -> it.angle is angle and it.height is height
-        charges
+        game.charges
 
     position-is-free-for-drop = (angle, height, this-charge-id) ->
       return false if creature-at-position angle, height
@@ -282,7 +279,7 @@ render = do
                     z"
 
       render-bind do
-        \.creature creature-layer, creatures, (.id)
+        \.creature creature-layer, game.creatures, (.id)
         ->
           rotating-base = this.append \g
             ..attr class : \creature
@@ -301,13 +298,13 @@ render = do
           d3.select this .each reposition 300
         ->
           this
-            .transition!duration update-time-step
-            .delay update-time-step / 3
+            .transition!duration game.update-time-step
+            .delay game.update-time-step / 3
             .attr "transform" "scale(0)"
             .remove!
 
       charge-elements = render-bind do
-        \.charge charge-layer, charges, (.id)
+        \.charge charge-layer, game.charges, (.id)
         ->
           rotating-base = this.append \g
             ..attr class : \charge
@@ -325,7 +322,7 @@ render = do
         (data) ->
           d3.select this
             ..select \.head>path
-              .transition!duration update-time-step
+              .transition!duration game.update-time-step
               .attr d : -> shape data.direction
             ..each reposition 200
         (.remove!)
@@ -340,7 +337,7 @@ var fail-level, complete-level # callbacks; defined later
 update = do
 
   hits = (thing-a, thing-b) ->
-    if  thing-a.angle  is thing-b.angle
+    if thing-a.angle  is thing-b.angle
       and thing-a.height is thing-b.height then return true
 
   remove = (array, element) ->
@@ -354,7 +351,7 @@ update = do
     # (Doing it during iteration messes up ordering.)
     dead-charges = []
     dead-creatures = []
-    charges.map ->
+    game.charges.map ->
       it.angle = (it.angle + 1) % angles.length
       it.height += switch it.direction
       | \up   => 1
@@ -363,43 +360,44 @@ update = do
       unless 0 <= it.height < n-orbits
         dead-charges.push it
 
-      creatures.for-each (c) ->
+      game.creatures.for-each (c) ->
         if it `hits` c
           it.direction = c.direction
           dead-creatures.push c
-          complete-level! if empty creatures
 
     # OK, now it's safe to do the dead-removal splicing.
     dead-charges.for-each ->
-      charges `remove` it
+      game.charges `remove` it
     dead-creatures.for-each ->
-      creatures `remove` it
-
-    fail-level! if empty charges
+      game.creatures `remove` it
+    complete-level! if empty game.creatures
+    fail-level! if empty game.charges
 
     render!
 
 var upd-interval
 start-action = ->
+  return if game.state is \running
+  game.state = \running
   upd-interval := set-interval do
     update
-    update-time-step
+    game.update-time-step
 
 stop-action = ->
-  game-state := \none
+  game.state = \none
   clear-interval upd-interval
 
 fail-level = ->
-  return if game-state isnt \running
+  return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
   stop-action!
   # TODO reload level
 
 complete-level = ->
-  return if game-state isnt \running
-  if levels[current-level + 1]?
+  return if game.state isnt \running
+  if levels[game.level + 1]?
     # Next level exists
-    console.log "LEVEL #current-level COMPLETE!"
+    console.log "LEVEL #{game.level} COMPLETE!"
     stop-action!
     # TODO load next level
   else
