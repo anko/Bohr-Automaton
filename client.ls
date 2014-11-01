@@ -496,7 +496,6 @@ fail-level = (options={}) ->
 
 complete-level = ->
   return if game.state isnt \running
-  sfx-success!
   if level game.level + 1 ?
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
@@ -504,6 +503,7 @@ complete-level = ->
     game.state = \loading
     set-timeout do
       ->
+        sfx-success!
         change-level ++game.level
         render { +initial, +allow-drag }
         game.state = \none
