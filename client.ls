@@ -217,7 +217,7 @@ render = do
 
 render { +initial }
 
-var level-completed # later define
+var level-completed # callback; defined later
 
 update = do
 
