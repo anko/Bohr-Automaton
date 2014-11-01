@@ -145,40 +145,24 @@ render = do
             "rotate(#{rad-to-deg angles[it.angle]})"
           target.select \.head .attr \transform "translate(#height)"
 
-      shape = ->
+      shape = (direction) ->
         w = creature-width
         h = creature-height
-        switch (it.direction or \none)
-        | \none =>
-          d3.select this
-            .attr d : "M0 0
-                       L#w 0
-                       L#w #h
-                       L0 #h
-                       z"
-            .style do
-              fill : creature-col
-              stroke : \none
-        | \up =>
-          d3.select this
-            .attr d : "M#{w/2} 0
-                       L#w #h
-                       L#{w/2} #{h * 0.8}
-                       L0 #h
-                       z"
-            .style do
-              fill : creature-col
-              stroke : \none
-        | \down =>
-          d3.select this
-            .attr d : "M#{w/2} #h
-                       L#w 0
-                       L#{w/2} #{h * 0.2}
-                       L0 0
-                       z"
-            .style do
-              fill : creature-col
-              stroke : \none
+        switch (direction or \none)
+        | \none => "M0 0
+                    L#w 0
+                    L#w #h
+                    L0 #h"
+        | \up =>   "M#{w/2} 0
+                    L#w #h
+                    L#{w/2} #{h * 0.8}
+                    L0 #h
+                    z"
+        | \down => "M#{w/2} #h
+                    L#w 0
+                    L#{w/2} #{h * 0.2}
+                    L0 0
+                    z"
 
       render-bind do
         \.creature creature-layer, creatures, (.id)
@@ -190,7 +174,8 @@ render = do
             ..append \path
               .attr do
                 transform : "rotate(90)translate(#{- creature-width/2},#{- creature-height/2})"
-              .each shape
+                d : -> shape it.direction
+              .style fill : creature-col
           rotating-base
             ..each reposition 0
         ->
