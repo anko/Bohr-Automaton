@@ -246,4 +246,10 @@ upd-interval = set-interval do
 level-completed = ->
   game-state := \none
   clear-interval upd-interval
-  console.log "YOU ARE WINNER!"
+
+  if levels[current-level + 1]?
+    # Next level exists
+    console.log "LEVEL #current-level COMPLETE!"
+  else
+    # Whole game complete
+    console.log "YOU WIN THE GAME!"
