@@ -331,11 +331,12 @@ render = do
         ->
           d3.select this .each reposition 300
         ->
-          this
+          outer = this
+          outer.select-all \.head
             .transition!duration game.update-time-step
             .delay game.update-time-step / 3
             .attr "transform" "scale(0)"
-            .remove!
+            .each \end ~> outer.remove!
 
       charge-elements = render-bind do
         \.charge charge-layer, game.charges, (.id)
