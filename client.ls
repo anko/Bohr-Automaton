@@ -66,7 +66,7 @@ level = ->
 # Game state object; holds things that change.
 game =
   level : 0
-  state : \none # Possible: running, win-screen, none
+  state : \none # Possible: running, loading, none
   creatures : []
   charges   : []
   update-time-step : 500ms
@@ -226,6 +226,7 @@ render = do
         switch game.state
         | \none => start-action!
         | \running => fail-level { delay : 0 }
+        | _ => # nothing
       .on \mouseover ->
         d3.select this .style do
           fill : do
@@ -427,11 +428,13 @@ fail-level = (options={}) ->
   return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
   stop-action!
+  game.state = \loading
   set-timeout do # Restart level
     ->
       console.log "Restarting level"
       change-level game.level
       render { +initial, +allow-drag }
+      game.state = \none
     if options.delay? then options.delay else 1000
 
 complete-level = ->
@@ -440,10 +443,12 @@ complete-level = ->
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
     stop-action!
+    game.state = \loading
     set-timeout do
       ->
         change-level ++game.level
         render { +initial, +allow-drag }
+        game.state = \none
       1000
   else
     console.log "YOU WIN THE GAME!"
