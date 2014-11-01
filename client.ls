@@ -35,7 +35,7 @@ e, sfx-start <- load-sfx \start.wav 1
 e, sfx-blop <- load-sfx \blop.wav 1
 e, sfx-nope <- load-sfx \nope.wav 1
 e, sfx-success <- load-sfx \success.wav 1
-e, sfx-touch <- load-sfx \touch.wav 1
+e, sfx-touch <- load-sfx \touch.wav 2
 
 sfx-start!
 
