@@ -64,7 +64,7 @@ change-level = (n) ->
 change-level current-level
 
 # Possible: running, win-screen, none
-game-state = \running
+game-state = \none
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -75,6 +75,14 @@ game-svg = d3.select \body .select \#game
 render = do
 
   # Render helpers
+
+  drag-charge = d3.behavior.drag!
+    .on \dragstart ->
+      console.log "DRAGSTART" it
+    .on \drag ->
+      console.log "DRAG" it
+    .on \dragend ->
+      console.log "DRAGEND" it
 
   rad-to-deg = (/ Math.PI * 180)
   thinstroke = ->
@@ -108,7 +116,7 @@ render = do
       .style fill : planet-col
 
   # Return actual render method
-  ->
+  (options={}) ->
     # Orbit circles
     render-bind do
       \.orbit-circle lines-layer, orbit-heights, null
@@ -196,7 +204,7 @@ render = do
             .attr "transform" "scale(0)"
             .remove!
 
-      render-bind do
+      charge-elements = render-bind do
         \.charge charge-layer, charges, (.id)
         ->
           rotating-base = this.append \g
@@ -220,7 +228,10 @@ render = do
             ..each reposition 200
         (.remove!)
 
-render { +initial }
+      if options.allow-drag then charge-elements.call drag-charge
+      else charge-elements.on \mousedown.drag null
+
+render { +initial, +allow-drag }
 
 var fail-level, complete-level # callbacks; defined later
 
@@ -266,9 +277,11 @@ update = do
 
     render!
 
-upd-interval = set-interval do
-  update
-  update-time-step
+var upd-interval
+start-action = ->
+  upd-interval := set-interval do
+    update
+    update-time-step
 
 stop-action = ->
   game-state := \none
