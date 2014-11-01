@@ -232,7 +232,6 @@ update = ->
   charges.map ->
     it.angle = (it.angle + 1) % angles.length
 
-    # Destroy creature at charge position
     creatures.for-each (c) ->
       if it `hits` c
         creatures `remove` c
