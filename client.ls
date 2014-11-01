@@ -7,7 +7,11 @@ console.log "Hi, I'm alive."
 planet-col   = \#00fcd3
 line-col     = \gray
 creature-col = \#c91515
+creature-bg-col = d3.hsl creature-col
+  ..l = 0.95
 charge-col   = \#00fcd3
+charge-bg-col = d3.hsl charge-col
+  ..l = 0.95
 
 update-time-step = 1000ms
 
@@ -174,6 +178,8 @@ render = do
             ..attr class : \creature
           head = rotating-base.append \g
             ..attr class : \head
+            ..append \circle .attr r : 15
+              .style fill : creature-bg-col, opacity : 0.80
             ..append \path
               .attr do
                 transform : "rotate(90)translate(#{- creature-width/2},#{- creature-height/2})"
@@ -197,6 +203,8 @@ render = do
             ..attr class : \charge
           head = rotating-base.append \g
             ..attr class : \head
+            ..append \circle .attr r : 15
+              .style fill : charge-bg-col, opacity : 0.80
             ..append \path
               .attr do
                 d : -> shape it.direction
