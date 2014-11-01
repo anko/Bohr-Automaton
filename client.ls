@@ -1,6 +1,6 @@
 require! d3
 vector = require \vec2
-{ empty } = require \prelude-ls
+{ empty, find } = require \prelude-ls
 
 console.log "Hi, I'm alive."
 
@@ -76,14 +76,6 @@ render = do
 
   # Render helpers
 
-  drag-charge = d3.behavior.drag!
-    .on \dragstart ->
-      console.log "DRAGSTART" it
-    .on \drag ->
-      console.log "DRAG" it
-    .on \dragend ->
-      console.log "DRAGEND" it
-
   rad-to-deg = (/ Math.PI * 180)
   thinstroke = ->
     this.style do
@@ -104,6 +96,52 @@ render = do
   creature-layer = game-svg.append \g
   charge-layer   = game-svg.append \g
   planet-layer   = game-svg.append \g
+  drag-layer     = game-svg.append \g
+
+  drag-charge = do
+
+    find-coordinates = (angle, height) ->
+      x : orbit-heights[height] * Math.cos angles[angle]
+      y : orbit-heights[height] * Math.sin angles[angle]
+
+    all-positions = ->
+      r = []
+      [ 0 til n-orbits ].for-each (height) ->
+        [0 til n-angles ] .for-each (angle) ->
+          r.push { angle, height }
+      return r
+
+    creature-at-position = (angle, height) ->
+      find do
+        -> it.angle is angle and it.height is height
+        creatures
+    charge-at-position = (angle, height) ->
+      find do
+        -> it.angle is angle and it.height is height
+        charges
+
+    position-is-free-for-drop = (angle, height, this-charge-id) ->
+      return false if creature-at-position angle, height
+      c = charge-at-position angle, height
+      if c and c.id isnt this-charge-id then return false
+      return true
+
+    find-possible-positions = (this-charge-id) ->
+      a = all-positions!
+      a.filter ->
+        position-is-free-for-drop it.angle, it.height, this-charge-id
+
+    d3.behavior.drag!
+      .on \dragstart ->
+        console.log "DRAGSTART" it
+        find-possible-positions it.id .for-each (pos) ->
+          { x, y } = find-coordinates pos.angle, pos.height
+          drag-layer.append \circle
+            .attr cx : x, cy : y, r : 3
+      .on \drag ->
+      .on \dragend ->
+        console.log "DRAGEND" it
+        drag-layer.select-all "circle" .remove!
 
   # This is static, so we only need to append it once
   do
