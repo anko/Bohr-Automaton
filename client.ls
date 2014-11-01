@@ -81,7 +81,9 @@ game-svg = d3.select \body .select \#game
   .append \g
   .attr transform : "translate(#{width/2},#{height/2})rotate(-90)"
 
+# Control actions to influence game state
 var start-action, stop-action
+var fail-level, complete-level
 
 render = do
 
@@ -209,14 +211,17 @@ render = do
 
   # This is static, so we only need to append it once
   do
-    planet-size = 25
+    planet-radius = 35
     # Planet background
     planet-layer.append \circle .attr r : min-orbit-r * 0.8
       .style fill : \white opacity : 0.65
     # Main planet
-    planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
+    planet-layer.append \circle .attr cx : 0 cy : 0 r : planet-radius
       .style fill : planet-col
-      .on \click -> start-action!
+      .on \click ->
+        switch game.state
+        | \none => start-action!
+        | \running => fail-level { delay : 0 }
       .on \mouseover ->
         d3.select this .style do
           fill : do
@@ -343,8 +348,6 @@ render = do
 
 render { +initial, +allow-drag }
 
-var fail-level, complete-level # callbacks; defined later
-
 update = do
 
   hits = (thing-a, thing-b) ->
@@ -399,16 +402,17 @@ stop-action = ->
   game.state = \none
   clear-interval upd-interval
 
-fail-level = ->
+fail-level = (options={}) ->
   return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
+  console.log options.delay
   stop-action!
   set-timeout do # Restart level
     ->
       console.log "Restarting level"
       change-level game.level
       render { +initial, +allow-drag }
-    1000
+    if options.delay? then options.delay else 1000
 
 complete-level = ->
   return if game.state isnt \running
