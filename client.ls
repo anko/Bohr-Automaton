@@ -156,6 +156,9 @@ render = do
               .duration 100
               .delay 0.75 * distance-between { x, y }, mouse-pos!
               .attr r : 2.5
+        drag-layer.append \circle
+          .attr cx : 0, cy : 0, r : 15 id : \target-indicator
+          .style display : \none fill : drag-target-col, opacity : 0.2
       .on \drag ->
         drag-state.best-pos = minimum-by do
           ->
@@ -163,6 +166,11 @@ render = do
               find-coordinates it.angle, it.height
               mouse-pos!
           drag-state.ok-positions
+        { best-pos } = drag-state
+        { x, y } = find-coordinates best-pos.angle, best-pos.height
+        game-svg.select \#target-indicator
+          .attr transform : "translate(#x,#y)"
+          .style display : \block
       .on \dragend ->
         { best-pos } = drag-state
         console.log "DRAGEND" it
