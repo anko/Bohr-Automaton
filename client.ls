@@ -50,6 +50,8 @@ levels =
 creatures = levels[current-level].creatures
 charges   = levels[current-level].charges
 
+game-state = \none # also possible: running, win-screen
+
 game-svg = d3.select \body .select \#game
   .append \svg
   .attr { width, height }
@@ -217,7 +219,7 @@ remove = (array, element) ->
     array.index-of element
     1
 
-level-complete = -> console.log "YOU ARE WINNER!"
+var level-complete # later define
 
 update = ->
   charges.map ->
@@ -231,6 +233,11 @@ update = ->
 
   render!
 
-set-interval do
+upd-interval = set-interval do
   update
   500
+
+level-complete = ->
+  game-state := \none
+  clear-interval upd-interval
+  console.log "YOU ARE WINNER!"
