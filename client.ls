@@ -59,7 +59,8 @@ change-level = (n) ->
 
 change-level current-level
 
-game-state = \none # also possible: running, win-screen
+# Possible: running, win-screen, none
+game-state = \running
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -213,7 +214,7 @@ render = do
 
 render { +initial }
 
-var level-completed # callback; defined later
+var level-completed, level-failed # callbacks; defined later
 
 update = do
 
@@ -253,18 +254,30 @@ update = do
     dead-creatures.for-each ->
       creatures `remove` it
 
+    level-failed! if empty charges
+
     render!
 
 upd-interval = set-interval do
   update
   update-time-step
 
-level-completed = ->
+stop-action = ->
   game-state := \none
   clear-interval upd-interval
 
+level-failed = ->
+  return if game-state isnt \running
+  console.log "OOPS, THAT FAILED."
+  stop-action!
+  # TODO reload level
+
+level-completed = ->
+  return if game-state isnt \running
   if levels[current-level + 1]?
     # Next level exists
     console.log "LEVEL #current-level COMPLETE!"
+    stop-action!
+    # TODO load next level
   else
     console.log "YOU WIN THE GAME!"
