@@ -30,20 +30,25 @@ creature = do
   (angle=0, height=0, direction=\none) ->
     { angle, height, direction, id : id++ }
 
-creatures =
-  * creature 0 0
-  * creature 1 1 \down
-  * creature 2 2 \up
-
 charge = do
   id = 0
   (angle, height, direction=\none) ->
     { angle, height, direction, id : id++ }
 
-charges =
-  * charge 4 0
-  * charge 4 1
-  * charge 4 2
+current-level = 0
+
+levels =
+  * creatures:
+      * creature 0 0
+      * creature 1 1 \down
+      * creature 2 2 \up
+    charges:
+      * charge 4 0
+      * charge 4 1
+      * charge 4 2
+  ...
+creatures = levels[current-level].creatures
+charges   = levels[current-level].charges
 
 game-svg = d3.select \body .select \#game
   .append \svg
