@@ -5,7 +5,7 @@ js-bundle = \bundle.js
 
 page = whatxml \html
   .. \head
-    .. \title ._ "It's a game!"
+    .. \title ._ "Bohr automaton"
     ..self-closing \link rel : \stylesheet  type : \text/css href : \main.css
   .. \body
     .. \div id : \game
