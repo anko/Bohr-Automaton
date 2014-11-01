@@ -4,12 +4,12 @@ vector = require \vec2
 
 console.log "Hi, I'm alive."
 
-planet-col   = \#00fcd3
+planet-col   = \#00e6c7
 line-col     = \gray
 creature-col = \#c91515
 creature-bg-col = d3.hsl creature-col
   ..l = 0.95
-charge-col   = \#00fcd3
+charge-col   = planet-col
 charge-bg-col = d3.hsl charge-col
   ..l = 0.95
 
