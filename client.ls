@@ -4,10 +4,10 @@ vector = require \vec2
 
 console.log "Hi, I'm alive."
 
-planet-col   = \cyan
+planet-col   = \#00fcd3
 line-col     = \gray
 creature-col = \#c91515
-charge-col   = \cyan
+charge-col   = \#00fcd3
 
 width  = 500px
 height = 500px
