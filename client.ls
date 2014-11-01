@@ -12,6 +12,7 @@ creature-bg-col = d3.hsl creature-col
 charge-col   = planet-col
 charge-bg-col = d3.hsl charge-col
   ..l = 0.95
+drag-target-col = \orange
 
 update-time-step = 1000ms
 
@@ -134,6 +135,10 @@ render = do
       a.filter ->
         position-is-free-for-drop it.angle, it.height, this-charge-id
 
+    mouse-pos = ->
+      [ x, y ] = d3.mouse game-svg.node!
+      { x, y }
+
     drag-state =
       ok-positions : []
       best-pos     : null
@@ -145,21 +150,30 @@ render = do
           ..for-each (pos) ->
             { x, y } = find-coordinates pos.angle, pos.height
             drag-layer.append \circle
-              .attr cx : x, cy : y, r : 3
+              .attr cx : x, cy : y, r : 0
+              .style fill : drag-target-col
+              .transition!
+              .duration 100
+              .delay 0.75 * distance-between { x, y }, mouse-pos!
+              .attr r : 2.5
       .on \drag ->
         drag-state.best-pos = minimum-by do
           ->
-            [ x, y] = d3.mouse game-svg.node!
             distance-between do
               find-coordinates it.angle, it.height
-              { x, y }
+              mouse-pos!
           drag-state.ok-positions
       .on \dragend ->
+        { best-pos } = drag-state
         console.log "DRAGEND" it
-        console.log drag-state.best-pos
-        it <<< drag-state.best-pos
+        console.log best-pos
+        it <<< best-pos
         render { +allow-drag }
-        drag-layer.select-all "circle" .remove!
+        drag-layer.select-all "circle"
+          .transition!duration 200
+          .ease \circle-in
+          .attr r : 0
+          .remove!
 
   # This is static, so we only need to append it once
   do
