@@ -121,7 +121,6 @@ render = do
           target.select \.head .attr \transform "translate(#height)"
 
       shape = ->
-        console.log it
         w = creature-width
         h = creature-height
         switch (it.shape or \equals)
