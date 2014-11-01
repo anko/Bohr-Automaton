@@ -41,7 +41,7 @@ levels =
       * creature 1 1 \down
       * creature 2 2 \up
     charges:
-      * charge 4 0
+      * charge 4 0 \up
       * charge 4 1
       * charge 4 2
   ...
@@ -81,7 +81,7 @@ render = do
   render-bind = (selector, layer, data, key, enter, update, exit) ->
     base = layer.select-all selector .data data, (key or null)
       ..enter!call enter
-      ..call update
+      ..each update
       ..exit!call exit
 
   # Enforce stacking order
@@ -179,7 +179,7 @@ render = do
           rotating-base
             ..each reposition 0
         ->
-          this.each reposition 300
+          d3.select this .each reposition 300
         ->
           this
             .transition!duration 500 .delay 200
@@ -187,23 +187,26 @@ render = do
             .remove!
 
       render-bind do
-        \.charge charge-layer, charges, null
+        \.charge charge-layer, charges, (.id)
         ->
           rotating-base = this.append \g
             ..attr class : \charge
           head = rotating-base.append \g
-            ..append \rect
+            ..attr class : \head
+            ..append \path
               .attr do
-                class : \head
-                width  : creature-width
-                height : creature-height
-                x : - creature-width / 2
-                y : - creature-height / 2
+                d : -> shape it.direction
+                transform : "rotate(90)translate(#{- creature-width/2},#{- creature-height/2})"
               .style \fill charge-col
           rotating-base
             ..each reposition 0
-        ->
-          this.each reposition 200
+        (data) ->
+          console.log data
+          d3.select this
+            ..select \.head>path
+              .transition!duration 500
+              .attr d : -> shape data.direction
+            ..each reposition 200
         (.remove!)
 
 render { +initial }
@@ -227,6 +230,7 @@ update = do
 
       creatures.for-each (c) ->
         if it `hits` c
+          it.direction = c.direction
           creatures `remove` c
           level-completed! if empty creatures
 
