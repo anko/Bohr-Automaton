@@ -30,18 +30,21 @@ angles = do
   incr = 2 * Math.PI / n-angles
   [ 0 til n-angles ] .map (* incr)
 
-creature = do
-  id = 0
-  (angle=0, height=0, direction=\none) ->
-    { angle, height, direction, id : id++ }
+level = ->
 
-charge = do
-  id = 0
-  (angle, height, direction=\none) ->
-    { angle, height, direction, id : id++ }
+  creature = do
+    id = 0
+    (angle=0, height=0, direction=\none) ->
+      { angle, height, direction, id : id++ }
 
-levels =
-  * creatures:
+  charge = do
+    id = 0
+    (angle, height, direction=\none) ->
+      { angle, height, direction, id : id++ }
+
+  switch it
+  | 0 =>
+    creatures:
       * creature 0 0
       * creature 1 1 \down
       * creature 2 2 \up
@@ -49,14 +52,15 @@ levels =
       * charge 4 0 \down
       * charge 4 1
       * charge 4 2
-  * creatures:
+  | 1 =>
+    creatures:
       * creature 0 0
       * creature 0 1 \down
       * creature 2 0
     charges:
       * charge 4 0 \down
       * charge 4 1
-  ...
+  | _ => null
 
 game =
   level : 0
@@ -66,7 +70,8 @@ game =
   update-time-step : 500ms
 
 change-level = (n) ->
-  game{creatures, charges} := levels[n]
+  game.creatures = level n .creatures
+  game.charges   = level n .charges
 
 change-level game.level
 
@@ -398,11 +403,16 @@ fail-level = ->
   return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
   stop-action!
-  # TODO reload level
+  set-timeout do # Restart level
+    ->
+      console.log "Restarting level"
+      change-level game.level
+      render { +initial, +allow-drag }
+    1000
 
 complete-level = ->
   return if game.state isnt \running
-  if levels[game.level + 1]?
+  if level game.level + 1 ?
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
     stop-action!
