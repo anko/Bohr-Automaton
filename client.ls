@@ -30,6 +30,8 @@ angles = do
   incr = 2 * Math.PI / n-angles
   [ 0 til n-angles ] .map (* incr)
 
+# Level generator
+# (It's deterministic; nothing procedural.)
 level = ->
 
   creature = do
@@ -62,6 +64,7 @@ level = ->
       * charge 4 1
   | _ => null
 
+# Game state object; holds things that change.
 game =
   level : 0
   state : \none # Possible: running, win-screen, none
@@ -73,8 +76,9 @@ change-level = (n) ->
   game.creatures = level n .creatures
   game.charges   = level n .charges
 
-change-level game.level
+change-level game.level # Initial
 
+# Game frame SVG, with origin set to centre
 game-svg = d3.select \body .select \#game
   .append \svg
   .attr { width, height }
@@ -144,10 +148,10 @@ render = do
 
     find-possible-positions = (this-charge-id) ->
       a = all-positions!
-      a.filter ->
-        position-is-free-for-drop it.angle, it.height, this-charge-id
+      a.filter -> position-is-free-for-drop it.angle, it.height, this-charge-id
 
     mouse-pos = ->
+      # D3 gives mouse positions back as an array; we want an object.
       [ x, y ] = d3.mouse game-svg.node!
       { x, y }
 
@@ -276,24 +280,37 @@ render = do
             "rotate(#{rad-to-deg angles[it.angle]})"
           target.select \.head .attr \transform "translate(#height)"
 
+      # Some SVG path specs for different shapes
       shape = (direction) ->
         w = creature-width
         h = creature-height
         switch (direction or \none)
-        | \none => "M0 0
-                    L#w 0
-                    L#w #h
-                    L0 #h"
-        | \up =>   "M#{w/2} 0
-                    L#w #h
-                    L#{w/2} #{h * 0.8}
-                    L0 #h
-                    z"
-        | \down => "M#{w/2} #h
-                    L#w 0
-                    L#{w/2} #{h * 0.2}
-                    L0 0
-                    z"
+        | \none => # Square shape
+          "M0 0
+           L#w 0
+           L#w #h
+           L0 #h"
+        | \up =>   # Upward arrow-head
+          "M#{w/2} 0
+           L#w #h
+           L#{w/2} #{h * 0.8}
+           L0 #h
+           z"
+        | \down => # Downward arrow-head
+          "M#{w/2} #h
+           L#w 0
+           L#{w/2} #{h * 0.2}
+           L0 0
+           z"
+
+      # The "creature" and "charge" objects are the ones that float on orbits
+      # around the central planet.
+      #
+      # They're positioned on a "rotating base" that determines their rotation.
+      # The radius of their orbit is determined by an inner "head" group.  This
+      # is done such that transitions of each can happen independently, so that
+      # the objects stick to their orbits instead of taking straight lines
+      # between points.
 
       render-bind do
         \.creature creature-layer, game.creatures, (.id)
@@ -347,9 +364,12 @@ render = do
       if options.allow-drag then charge-elements.call drag-charge
       else charge-elements.on \mousedown.drag null
 
+# Initial render
 render { +initial, +allow-drag }
 
 update = do
+
+  # Update helpers
 
   hits = (thing-a, thing-b) ->
     if thing-a.angle  is thing-b.angle
@@ -360,7 +380,7 @@ update = do
       array.index-of element
       1
 
-  ->
+  -> # Actual update method
 
     # Store what should be deleted after iteration.
     # (Doing it during iteration messes up ordering.)
