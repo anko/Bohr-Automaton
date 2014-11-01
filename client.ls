@@ -1,6 +1,6 @@
 require! d3
 vector = require \vec2
-{ empty } = require \prelude-ls
+{ empty, find, minimum-by } = require \prelude-ls
 
 console.log "Hi, I'm alive."
 
@@ -12,8 +12,9 @@ creature-bg-col = d3.hsl creature-col
 charge-col   = planet-col
 charge-bg-col = d3.hsl charge-col
   ..l = 0.95
+drag-target-col = \orange
 
-update-time-step = 1000ms
+update-time-step = 500ms
 
 width  = 500px
 height = 500px
@@ -64,13 +65,15 @@ change-level = (n) ->
 change-level current-level
 
 # Possible: running, win-screen, none
-game-state = \running
+game-state = \none
 
 game-svg = d3.select \body .select \#game
   .append \svg
   .attr { width, height }
   .append \g
   .attr transform : "translate(#{width/2},#{height/2})rotate(-90)"
+
+var start-action, stop-action
 
 render = do
 
@@ -96,6 +99,110 @@ render = do
   creature-layer = game-svg.append \g
   charge-layer   = game-svg.append \g
   planet-layer   = game-svg.append \g
+  drag-layer     = game-svg.append \g
+
+  drag-charge = do
+
+    find-coordinates = (angle, height) ->
+      x : orbit-heights[height] * Math.cos angles[angle]
+      y : orbit-heights[height] * Math.sin angles[angle]
+
+    distance-between = (a, b) ->
+      Math.sqrt ((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2 )
+
+    all-positions = ->
+      r = []
+      [ 0 til n-orbits ].for-each (height) ->
+        [0 til n-angles ] .for-each (angle) ->
+          r.push { angle, height }
+      return r
+
+    creature-at-position = (angle, height) ->
+      find do
+        -> it.angle is angle and it.height is height
+        creatures
+    charge-at-position = (angle, height) ->
+      find do
+        -> it.angle is angle and it.height is height
+        charges
+
+    position-is-free-for-drop = (angle, height, this-charge-id) ->
+      return false if creature-at-position angle, height
+      c = charge-at-position angle, height
+      if c and c.id isnt this-charge-id then return false
+      return true
+
+    find-possible-positions = (this-charge-id) ->
+      a = all-positions!
+      a.filter ->
+        position-is-free-for-drop it.angle, it.height, this-charge-id
+
+    mouse-pos = ->
+      [ x, y ] = d3.mouse game-svg.node!
+      { x, y }
+
+    drag-state =
+      ok-positions : []
+      best-pos     : null
+      initial-pos  : null
+
+    d3.behavior.drag!
+      .on \dragstart ->
+        console.log "DRAGSTART" it
+
+
+        drag-state.ok-positions := find-possible-positions it.id
+          ..for-each (pos) ->
+            { x, y } = find-coordinates pos.angle, pos.height
+            drag-layer.append \circle
+              .attr cx : x, cy : y, r : 0
+              .style fill : drag-target-col
+              .transition!
+              .duration 100
+              .delay 0.75 * distance-between { x, y }, mouse-pos!
+              .attr r : 2.5
+        drag-layer.append \circle
+          .attr cx : 0, cy : 0, r : 15 id : \target-indicator
+          .style display : \none fill : drag-target-col, opacity : 0.2
+        { x : initial-x, y : initial-y } = find-coordinates it.angle, it.height
+        drag-layer.append \line
+          .attr x1 : initial-x, y1 : initial-y, id : \target-indicator-line
+          .style do
+            display : \none
+            stroke : drag-target-col
+            "stroke-dasharray" : "2 2"
+
+      .on \drag ->
+        drag-state.best-pos = minimum-by do
+          ->
+            distance-between do
+              find-coordinates it.angle, it.height
+              mouse-pos!
+          drag-state.ok-positions
+        { best-pos } = drag-state
+        { x, y } = find-coordinates best-pos.angle, best-pos.height
+        game-svg.select \#target-indicator
+          .attr transform : "translate(#x,#y)"
+          .style display : \block
+        game-svg.select \#target-indicator-line
+          .attr x2 : x, y2 : y
+          .style display : \block
+
+      .on \dragend ->
+        { best-pos } = drag-state
+        console.log "DRAGEND" it
+        console.log best-pos
+        it <<< best-pos
+        render { +allow-drag }
+        drag-layer.select-all "circle"
+          .transition!duration 200
+          .ease \circle-in
+          .attr r : 0
+          .remove!
+        drag-layer.select-all "line"
+          .transition!duration 200
+          .style "stroke-width" 0
+          .remove!
 
   # This is static, so we only need to append it once
   do
@@ -106,9 +213,17 @@ render = do
     # Main planet
     planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
       .style fill : planet-col
+      .on \click -> start-action!
+      .on \mouseover ->
+        d3.select this .style do
+          fill : do
+            d3.hsl planet-col .brighter 0.5
+      .on \mouseout ->
+        d3.select this .style do
+          fill : planet-col
 
   # Return actual render method
-  ->
+  (options={}) ->
     # Orbit circles
     render-bind do
       \.orbit-circle lines-layer, orbit-heights, null
@@ -196,7 +311,7 @@ render = do
             .attr "transform" "scale(0)"
             .remove!
 
-      render-bind do
+      charge-elements = render-bind do
         \.charge charge-layer, charges, (.id)
         ->
           rotating-base = this.append \g
@@ -220,7 +335,10 @@ render = do
             ..each reposition 200
         (.remove!)
 
-render { +initial }
+      if options.allow-drag then charge-elements.call drag-charge
+      else charge-elements.on \mousedown.drag null
+
+render { +initial, +allow-drag }
 
 var fail-level, complete-level # callbacks; defined later
 
@@ -266,9 +384,11 @@ update = do
 
     render!
 
-upd-interval = set-interval do
-  update
-  update-time-step
+var upd-interval
+start-action = ->
+  upd-interval := set-interval do
+    update
+    update-time-step
 
 stop-action = ->
   game-state := \none
