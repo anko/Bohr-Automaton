@@ -25,15 +25,15 @@ angles = do
   incr = 2 * Math.PI / n-angles
   [ 0 til n-angles ] .map (* incr)
 
+creature = do
+  id = 0
+  (angle=0, height=0, direction=\equals) ->
+    { angle, height, direction, id : id++ }
+
 creatures =
-  * angle  : 0
-    height : 0
-  * angle  : 1
-    height : 1
-    shape  : \down
-  * angle  : 2
-    height : 2
-    shape  : \up
+  * creature 0 0
+  * creature 1 1 \down
+  * creature 2 2 \up
 
 charges =
   * angle  : 5
@@ -59,8 +59,8 @@ render = do
 
   # Encapsulate the D3 pattern of "enter, update, exit"
   # See [here](http://bost.ocks.org/mike/join/) for more on that.
-  render-bind = (selector, layer, data, enter, update, exit) ->
-    base = layer.select-all selector .data data
+  render-bind = (selector, layer, data, key, enter, update, exit) ->
+    base = layer.select-all selector .data data, (key or null)
       ..enter!call enter
       ..call update
       ..exit!call exit
@@ -79,7 +79,7 @@ render = do
   ->
     # Orbit circles
     render-bind do
-      \.orbit-circle lines-layer, orbit-heights
+      \.orbit-circle lines-layer, orbit-heights, null
       -> this .append \circle
         ..attr r : 0 class : \orbit-circle
         ..call thinstroke
@@ -92,7 +92,7 @@ render = do
 
     # Sector lines (at angles)
     render-bind do
-      \.angle-line lines-layer, angles
+      \.angle-line lines-layer, angles, null
       -> this.append \line
         ..call thinstroke
           ..attr x2 : 0 y2 : 0 class : \angle-line
@@ -123,7 +123,7 @@ render = do
       shape = ->
         w = creature-width
         h = creature-height
-        switch (it.shape or \equals)
+        switch (it.direction or \equals)
         | \equals =>
           d3.select this
             .attr d : "M0 0
@@ -156,7 +156,7 @@ render = do
               stroke : \none
 
       render-bind do
-        \.creature creature-layer, creatures
+        \.creature creature-layer, creatures, (.id)
         ->
           rotating-base = this.append \g
             ..attr class : \creature
@@ -173,7 +173,7 @@ render = do
         (.remove!)
 
       render-bind do
-        \.charge charge-layer, charges
+        \.charge charge-layer, charges, null
         ->
           rotating-base = this.append \g
             ..attr class : \charge
@@ -194,8 +194,24 @@ render = do
 
 render { +initial }
 
+hits = (thing-a, thing-b) ->
+  if  thing-a.angle  is thing-b.angle
+    and thing-a.height is thing-b.height then return true
+
+remove = (array, element) ->
+  array.splice do
+    array.index-of element
+    1
+
 update = ->
-  charges.map -> it.angle = (it.angle + 1) % angles.length
+  charges.map ->
+    it.angle = (it.angle + 1) % angles.length
+
+    # Destroy creature at charge position
+    creatures.for-each (c) ->
+      if it `hits` c
+        creatures `remove` c
+
   render!
 
 set-interval do
