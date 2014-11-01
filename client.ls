@@ -3,7 +3,6 @@ require! d3
 
 # Load sound effects
 
-
 audio-context = do
   constructor = window.AudioContext or window.webkitAudioContext
   if constructor then new constructor! else null
@@ -32,11 +31,12 @@ load-sfx = (src, volume, cb) ->
           console.log "WebAudio not supported; audio disabled."
           cb null sfx null null # Return no-op
 
-e, start <- load-sfx \start.wav 1
+e, sfx-start <- load-sfx \start.wav 1
+e, sfx-blop <- load-sfx \blop.wav 1
+e, sfx-nope <- load-sfx \nope.wav 1
+e, sfx-success <- load-sfx \success.wav 1
 
-start!
-
-console.log "Hi, I'm alive."
+sfx-start!
 
 planet-col   = \#00e6c7
 line-col     = \gray
@@ -448,7 +448,11 @@ update = do
           it.direction = c.direction
           dead-creatures.push c
 
+    if dead-creatures.length > 0
+      sfx-blop!
+
     # OK, now it's safe to do the dead-removal splicing.
+
     dead-charges.for-each ->
       game.charges `remove` it
     dead-creatures.for-each ->
@@ -475,6 +479,7 @@ stop-action = ->
 fail-level = (options={}) ->
   return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
+  sfx-nope!
   stop-action!
   game.state = \loading
   set-timeout do # Restart level
@@ -487,6 +492,7 @@ fail-level = (options={}) ->
 
 complete-level = ->
   return if game.state isnt \running
+  sfx-success!
   if level game.level + 1 ?
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"

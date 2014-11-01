@@ -10,8 +10,11 @@ html: page.ls
 	./page.ls > static/index.html
 css: main.css
 	myth main.css > static/main.css
-sfx : sfx/start.wav
-	ln --force --relative --symbolic sfx/start.wav static/start.wav
+sfx : sfx/start.wav sfx/blop.wav sfx/nope.wav sfx/success.wav
+	ln --force --relative --symbolic sfx/start.wav static/
+	ln --force --relative --symbolic sfx/blop.wav static/
+	ln --force --relative --symbolic sfx/nope.wav static/
+	ln --force --relative --symbolic sfx/success.wav static/
 
 serve: all
 	cd static; $(WEBSERVER)
