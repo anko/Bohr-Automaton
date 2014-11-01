@@ -9,7 +9,7 @@ line-col     = \gray
 creature-col = \#c91515
 charge-col   = \#00fcd3
 
-update-time-step = 500ms
+update-time-step = 1000ms
 
 width  = 500px
 height = 500px
@@ -43,7 +43,7 @@ levels =
       * creature 1 1 \down
       * creature 2 2 \up
     charges:
-      * charge 4 0 \up
+      * charge 4 0 \down
       * charge 4 1
       * charge 4 2
   ...
@@ -204,7 +204,6 @@ render = do
           rotating-base
             ..each reposition 0
         (data) ->
-          console.log data
           d3.select this
             ..select \.head>path
               .transition!duration update-time-step
@@ -228,14 +227,31 @@ update = do
       1
 
   ->
+
+    # Store what should be deleted after iteration.
+    # (Doing it during iteration messes up ordering.)
+    dead-charges = []
+    dead-creatures = []
     charges.map ->
       it.angle = (it.angle + 1) % angles.length
+      it.height += switch it.direction
+      | \up   => 1
+      | \down => -1
+      | _     => 0
+      unless 0 <= it.height < n-orbits
+        dead-charges.push it
 
       creatures.for-each (c) ->
         if it `hits` c
           it.direction = c.direction
-          creatures `remove` c
+          dead-creatures.push c
           level-completed! if empty creatures
+
+    # OK, now it's safe to do the dead-removal splicing.
+    dead-charges.for-each ->
+      charges `remove` it
+    dead-creatures.for-each ->
+      creatures `remove` it
 
     render!
 
