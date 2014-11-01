@@ -327,9 +327,9 @@ render = do
                 d : -> shape it.direction
               .style fill : creature-col
           rotating-base
-            ..each reposition 0
+            ..each reposition 300
         ->
-          d3.select this .each reposition 300
+          d3.select this .each reposition game.update-time-step * 0.7
         ->
           outer = this
           outer.select-all \.head
@@ -353,14 +353,20 @@ render = do
                 transform : "rotate(90)translate(#{- creature-width/2},#{- creature-height/2})"
               .style \fill charge-col
           rotating-base
-            ..each reposition 0
+            ..each reposition 300
         (data) ->
           d3.select this
             ..select \.head>path
               .transition!duration game.update-time-step
               .attr d : -> shape data.direction
-            ..each reposition 200
-        (.remove!)
+            ..each reposition game.update-time-step * 0.7
+        ->
+          outer = this
+          outer.select-all \.head
+            .transition!duration game.update-time-step
+            .delay game.update-time-step / 3
+            .attr "transform" "scale(0)"
+            .each \end ~> outer.remove!
 
       if options.allow-drag then charge-elements.call drag-charge
       else charge-elements.on \mousedown.drag null
