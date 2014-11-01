@@ -170,7 +170,11 @@ render = do
             ..each reposition 0
         ->
           this.each reposition 300
-        (.remove!)
+        ->
+          this
+            .transition!duration 500 .delay 200
+            .attr "transform" "scale(0)"
+            .remove!
 
       render-bind do
         \.charge charge-layer, charges, null
