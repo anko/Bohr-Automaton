@@ -371,7 +371,7 @@ update = do
     dead-creatures.for-each ->
       game.creatures `remove` it
     complete-level! if empty game.creatures
-    fail-level! if empty game.charges
+    fail-level!     if empty game.charges
 
     render!
 
