@@ -262,8 +262,8 @@ render = do
     # Radially moving objects
     do
 
-      creature-height = 10
-      creature-width  = 10
+      creature-height = 12
+      creature-width  = 12
 
       reposition = (duration) ->
         ->
@@ -397,6 +397,7 @@ start-action = ->
   upd-interval := set-interval do
     update
     game.update-time-step
+  update! # first update instantly
 
 stop-action = ->
   game.state = \none
@@ -405,7 +406,6 @@ stop-action = ->
 fail-level = (options={}) ->
   return if game.state isnt \running
   console.log "OOPS, THAT FAILED."
-  console.log options.delay
   stop-action!
   set-timeout do # Restart level
     ->
