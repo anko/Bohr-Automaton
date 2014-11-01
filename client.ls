@@ -230,8 +230,14 @@ render = do
       .on \mouseover ->
         d3.select this .style do
           fill : do
-            d3.hsl planet-col .brighter 0.5
+            d3.hsl planet-col .brighter 0.2
       .on \mouseout ->
+        d3.select this .style do
+          fill : planet-col
+      .on \mousedown ->
+        d3.select this .style do
+          fill : d3.hsl planet-col .darker 0.5
+      .on \mouseup ->
         d3.select this .style do
           fill : planet-col
 
