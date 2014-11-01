@@ -27,7 +27,7 @@ angles = do
 
 creature = do
   id = 0
-  (angle=0, height=0, direction=\equals) ->
+  (angle=0, height=0, direction=\none) ->
     { angle, height, direction, id : id++ }
 
 creatures =
@@ -123,8 +123,8 @@ render = do
       shape = ->
         w = creature-width
         h = creature-height
-        switch (it.direction or \equals)
-        | \equals =>
+        switch (it.direction or \none)
+        | \none =>
           d3.select this
             .attr d : "M0 0
                        L#w 0
