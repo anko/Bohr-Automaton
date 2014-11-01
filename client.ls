@@ -1,6 +1,41 @@
 require! d3
 { empty, find, minimum-by } = require \prelude-ls
 
+# Load sound effects
+
+
+audio-context = do
+  constructor = window.AudioContext or window.webkitAudioContext
+  if constructor then new constructor! else null
+sfx = do
+  construct = (buffer, volume) ->
+    play = ->
+      return if not audio-context # Bail if no WebAudio support
+      # Play it
+      audio-context.create-buffer-source!
+        ..buffer = buffer
+        ..connect (audio-context.create-gain!
+          ..gain.value = volume
+          ..connect audio-context.destination)
+        ..start 0
+
+load-sfx = (src, volume, cb) ->
+  d3.xhr src
+    ..response-type \arraybuffer
+    ..get (e, data) ->
+      if e then cb e
+      else
+        if audio-context
+          audio-context.decode-audio-data data.response, ->
+            cb null, new sfx it, volume
+        else
+          console.log "WebAudio not supported; audio disabled."
+          cb null sfx null null # Return no-op
+
+e, start <- load-sfx \start.wav 1
+
+start!
+
 console.log "Hi, I'm alive."
 
 planet-col   = \#00e6c7
