@@ -152,9 +152,8 @@ render = do
       { x, y }
 
     drag-state =
-      ok-positions : []
-      best-pos     : null
-      initial-pos  : null
+      ok-positions : []   # Free positions (OK to drop in)
+      best-pos     : null # Whichever is nearest the pointer
 
     d3.behavior.drag!
       .on \dragstart ->
@@ -197,7 +196,8 @@ render = do
 
       .on \dragend ->
         { best-pos } = drag-state
-        it <<< best-pos
+        if best-pos # In case this was just a click (`.on \drag` never fired)
+          it <<< best-pos
         render { +allow-drag }
         drag-layer.select-all "circle"
           .transition!duration 200
@@ -208,6 +208,7 @@ render = do
           .transition!duration 200
           .style "stroke-width" 0
           .remove!
+        drag-state.best-pos = null
 
   # This is static, so we only need to append it once
   do
