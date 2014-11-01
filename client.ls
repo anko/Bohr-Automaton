@@ -217,27 +217,29 @@ render = do
 
 render { +initial }
 
-hits = (thing-a, thing-b) ->
-  if  thing-a.angle  is thing-b.angle
-    and thing-a.height is thing-b.height then return true
-
-remove = (array, element) ->
-  array.splice do
-    array.index-of element
-    1
-
 var level-completed # later define
 
-update = ->
-  charges.map ->
-    it.angle = (it.angle + 1) % angles.length
+update = do
 
-    creatures.for-each (c) ->
-      if it `hits` c
-        creatures `remove` c
-        level-completed! if empty creatures
+  hits = (thing-a, thing-b) ->
+    if  thing-a.angle  is thing-b.angle
+      and thing-a.height is thing-b.height then return true
 
-  render!
+  remove = (array, element) ->
+    array.splice do
+      array.index-of element
+      1
+
+  ->
+    charges.map ->
+      it.angle = (it.angle + 1) % angles.length
+
+      creatures.for-each (c) ->
+        if it `hits` c
+          creatures `remove` c
+          level-completed! if empty creatures
+
+    render!
 
 upd-interval = set-interval do
   update
