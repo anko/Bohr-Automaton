@@ -9,6 +9,8 @@ line-col     = \gray
 creature-col = \#c91515
 charge-col   = \#00fcd3
 
+update-time-step = 500ms
+
 width  = 500px
 height = 500px
 
@@ -182,7 +184,8 @@ render = do
           d3.select this .each reposition 300
         ->
           this
-            .transition!duration 500 .delay 200
+            .transition!duration update-time-step
+            .delay update-time-step / 3
             .attr "transform" "scale(0)"
             .remove!
 
@@ -204,7 +207,7 @@ render = do
           console.log data
           d3.select this
             ..select \.head>path
-              .transition!duration 500
+              .transition!duration update-time-step
               .attr d : -> shape data.direction
             ..each reposition 200
         (.remove!)
@@ -238,7 +241,7 @@ update = do
 
 upd-interval = set-interval do
   update
-  500
+  update-time-step
 
 level-completed = ->
   game-state := \none
