@@ -31,11 +31,11 @@ load-sfx = (src, volume, cb) ->
           console.log "WebAudio not supported; audio disabled."
           cb null sfx null null # Return no-op
 
-e, sfx-start <- load-sfx \start.wav 1
-e, sfx-blop <- load-sfx \blop.wav 1
-e, sfx-nope <- load-sfx \nope.wav 1
-e, sfx-success <- load-sfx \success.wav 1
-e, sfx-touch <- load-sfx \touch.wav 2
+e, sfx-start   <- load-sfx \start.wav   0.5
+e, sfx-blop    <- load-sfx \blop.wav    1
+e, sfx-nope    <- load-sfx \nope.wav    1
+e, sfx-success <- load-sfx \success.wav 0.7
+e, sfx-touch   <- load-sfx \touch.wav   1.5
 
 sfx-start!
 
