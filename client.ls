@@ -35,8 +35,6 @@ charge = do
   (angle, height, direction=\none) ->
     { angle, height, direction, id : id++ }
 
-current-level = 0
-
 levels =
   * creatures:
       * creature 0 0
@@ -47,8 +45,17 @@ levels =
       * charge 4 1
       * charge 4 2
   ...
-creatures = levels[current-level].creatures
-charges   = levels[current-level].charges
+
+creatures = []
+charges   = []
+
+current-level = 0
+
+change-level = (n) ->
+  level = levels[n]
+  { creatures, charges } := level
+
+change-level current-level
 
 game-state = \none # also possible: running, win-screen
 
