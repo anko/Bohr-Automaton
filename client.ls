@@ -1,6 +1,6 @@
 require! d3
 vector = require \vec2
-{ join } = require \prelude-ls
+{ empty } = require \prelude-ls
 
 console.log "Hi, I'm alive."
 
@@ -43,7 +43,7 @@ charge = do
 charges =
   * charge 4 0
   * charge 4 1
-  ...
+  * charge 4 2
 
 game-svg = d3.select \body .select \#game
   .append \svg
@@ -212,6 +212,8 @@ remove = (array, element) ->
     array.index-of element
     1
 
+level-complete = -> console.log "YOU ARE WINNER!"
+
 update = ->
   charges.map ->
     it.angle = (it.angle + 1) % angles.length
@@ -220,6 +222,7 @@ update = ->
     creatures.for-each (c) ->
       if it `hits` c
         creatures `remove` c
+        level-complete! if empty creatures
 
   render!
 
