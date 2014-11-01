@@ -222,7 +222,7 @@ render = do
 
 render { +initial }
 
-var level-completed, level-failed # callbacks; defined later
+var fail-level, complete-level # callbacks; defined later
 
 update = do
 
@@ -254,7 +254,7 @@ update = do
         if it `hits` c
           it.direction = c.direction
           dead-creatures.push c
-          level-completed! if empty creatures
+          complete-level! if empty creatures
 
     # OK, now it's safe to do the dead-removal splicing.
     dead-charges.for-each ->
@@ -262,7 +262,7 @@ update = do
     dead-creatures.for-each ->
       creatures `remove` it
 
-    level-failed! if empty charges
+    fail-level! if empty charges
 
     render!
 
@@ -274,13 +274,13 @@ stop-action = ->
   game-state := \none
   clear-interval upd-interval
 
-level-failed = ->
+fail-level = ->
   return if game-state isnt \running
   console.log "OOPS, THAT FAILED."
   stop-action!
   # TODO reload level
 
-level-completed = ->
+complete-level = ->
   return if game-state isnt \running
   if levels[current-level + 1]?
     # Next level exists
