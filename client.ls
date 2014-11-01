@@ -226,7 +226,7 @@ remove = (array, element) ->
     array.index-of element
     1
 
-var level-complete # later define
+var level-completed # later define
 
 update = ->
   charges.map ->
@@ -236,7 +236,7 @@ update = ->
     creatures.for-each (c) ->
       if it `hits` c
         creatures `remove` c
-        level-complete! if empty creatures
+        level-completed! if empty creatures
 
   render!
 
@@ -244,7 +244,7 @@ upd-interval = set-interval do
   update
   500
 
-level-complete = ->
+level-completed = ->
   game-state := \none
   clear-interval upd-interval
   console.log "YOU ARE WINNER!"
