@@ -1,5 +1,4 @@
 require! d3
-vector = require \vec2
 { empty, find, minimum-by } = require \prelude-ls
 
 console.log "Hi, I'm alive."
