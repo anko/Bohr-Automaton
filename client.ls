@@ -91,8 +91,14 @@ render = do
   planet-layer   = game-svg.append \g
 
   # This is static, so we only need to append it once
-  planet = planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
-    .style fill : planet-col
+  do
+    planet-size = 25
+    # Planet background
+    planet-layer.append \circle .attr r : min-orbit-r * 0.8
+      .style fill : \white opacity : 0.65
+    # Main planet
+    planet-layer.append \circle .attr cx : 0 cy : 0 r : 25
+      .style fill : planet-col
 
   # Return actual render method
   ->
