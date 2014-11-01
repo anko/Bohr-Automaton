@@ -35,6 +35,7 @@ e, sfx-start <- load-sfx \start.wav 1
 e, sfx-blop <- load-sfx \blop.wav 1
 e, sfx-nope <- load-sfx \nope.wav 1
 e, sfx-success <- load-sfx \success.wav 1
+e, sfx-touch <- load-sfx \touch.wav 1
 
 sfx-start!
 
@@ -217,12 +218,15 @@ render = do
             "stroke-dasharray" : "2 2"
 
       .on \drag ->
-        drag-state.best-pos = minimum-by do
+        new-best-pos = minimum-by do
           ->
             distance-between do
               find-coordinates it.angle, it.height
               mouse-pos!
           drag-state.ok-positions
+        if new-best-pos isnt drag-state.best-pos
+          sfx-touch!
+        drag-state.best-pos = new-best-pos
         { best-pos } = drag-state
         { x, y } = find-coordinates best-pos.angle, best-pos.height
         game-svg.select \#target-indicator
