@@ -35,9 +35,14 @@ creatures =
   * creature 1 1 \down
   * creature 2 2 \up
 
+charge = do
+  id = 0
+  (angle, height, direction=\none) ->
+    { angle, height, direction, id : id++ }
+
 charges =
-  * angle  : 5
-    height : 0
+  * charge 4 0
+  * charge 4 1
   ...
 
 game-svg = d3.select \body .select \#game
