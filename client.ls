@@ -49,6 +49,13 @@ levels =
       * charge 4 0 \down
       * charge 4 1
       * charge 4 2
+  * creatures:
+      * creature 0 0
+      * creature 0 1 \down
+      * creature 2 0
+    charges:
+      * charge 4 0 \down
+      * charge 4 1
   ...
 
 game =
@@ -59,8 +66,7 @@ game =
   update-time-step : 500ms
 
 change-level = (n) ->
-  level = levels[n]
-  game{creatures, charges} := level
+  game{creatures, charges} := levels[n]
 
 change-level game.level
 
@@ -370,10 +376,11 @@ update = do
       game.charges `remove` it
     dead-creatures.for-each ->
       game.creatures `remove` it
-    complete-level! if empty game.creatures
-    fail-level!     if empty game.charges
-
     render!
+    if empty game.creatures
+      return complete-level!
+    if empty game.charges
+      return fail-level!
 
 var upd-interval
 start-action = ->
@@ -399,6 +406,10 @@ complete-level = ->
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
     stop-action!
-    # TODO load next level
+    set-timeout do
+      ->
+        change-level ++game.level
+        render { +initial, +allow-drag }
+      1000
   else
     console.log "YOU WIN THE GAME!"
