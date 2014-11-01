@@ -253,5 +253,4 @@ level-completed = ->
     # Next level exists
     console.log "LEVEL #current-level COMPLETE!"
   else
-    # Whole game complete
     console.log "YOU WIN THE GAME!"
