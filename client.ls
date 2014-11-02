@@ -36,6 +36,7 @@ e, sfx-blop    <- load-sfx \blop.wav    1
 e, sfx-nope    <- load-sfx \nope.wav    1
 e, sfx-success <- load-sfx \success.wav 0.7
 e, sfx-touch   <- load-sfx \touch.wav   1.2
+e, sfx-change  <- load-sfx \change.wav  0.8
 
 sfx-start!
 
@@ -369,9 +370,11 @@ render = do
                 .transition!duration 100
                 .attr \r radius
             .on \click (_, i) ->
+              return if game.level is i
               stop-action!
               game.level = i
               change-level i
+              sfx-change!
             .transition!duration 900
             .delay (_,i) -> 300 + i * 50
             .attr do
