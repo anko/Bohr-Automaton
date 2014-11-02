@@ -54,16 +54,6 @@ height = 500px
 
 min-orbit-r = 100
 max-orbit-r = 200
-n-orbits    = 3
-
-orbit-heights = do
-  incr = (max-orbit-r - min-orbit-r) / (n-orbits - 1)
-  [0 til n-orbits].map (* incr) .map (+ min-orbit-r)
-
-n-angles = 9
-angles = do
-  incr = 2 * Math.PI / n-angles
-  [ 0 til n-angles ] .map (* incr)
 
 # Level generator
 # (It's deterministic; nothing procedural.)
@@ -89,6 +79,8 @@ level = ->
       * charge 4 0 \down
       * charge 4 1
       * charge 4 2
+    n-angles  : 9
+    n-heights : 3
   | 1 =>
     creatures:
       * creature 0 0
@@ -97,6 +89,8 @@ level = ->
     charges:
       * charge 4 0 \down
       * charge 4 1
+    n-angles  : 9
+    n-heights : 4
   | _ => null
 
 # Game state object; holds things that change.
@@ -106,10 +100,22 @@ game =
   creatures : []
   charges   : []
   update-time-step : 500ms
+  n-angles  : 0
+  n-heights : 0
+  angles  : []
+  heights : []
 
 change-level = (n) ->
   game.creatures = level n .creatures
   game.charges   = level n .charges
+  game.n-angles  = level n .n-angles
+  game.n-heights = level n .n-heights
+  game.angles = do
+    incr = 2 * Math.PI / game.n-angles
+    [ 0 til game.n-angles ] .map (* incr)
+  game.heights = do
+    incr = (max-orbit-r - min-orbit-r) / (game.n-heights - 1)
+    [0 til game.n-heights].map (* incr) .map (+ min-orbit-r)
 
 change-level game.level # Initial
 
@@ -153,16 +159,16 @@ render = do
   drag-charge = do
 
     find-coordinates = (angle, height) ->
-      x : orbit-heights[height] * Math.cos angles[angle]
-      y : orbit-heights[height] * Math.sin angles[angle]
+      x : game.heights[height] * Math.cos game.angles[angle]
+      y : game.heights[height] * Math.sin game.angles[angle]
 
     distance-between = (a, b) ->
       Math.sqrt ((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2 )
 
     all-positions = ->
       r = []
-      [ 0 til n-orbits ].for-each (height) ->
-        [0 til n-angles ] .for-each (angle) ->
+      [ 0 til game.n-heights ].for-each (height) ->
+        [0 til game.n-angles ] .for-each (angle) ->
           r.push { angle, height }
       return r
 
@@ -284,20 +290,20 @@ render = do
   (options={}) ->
     # Orbit circles
     render-bind do
-      \.orbit-circle lines-layer, orbit-heights, null
+      \.orbit-circle lines-layer, game.heights, null
       -> this .append \circle
         ..attr r : 0 class : \orbit-circle
         ..call thinstroke
         ..transition!
           ..duration 1000
-          ..delay (_,i) -> (orbit-heights.length - i) * 100
+          ..delay (_,i) -> (game.n-heights - i) * 100
           ..attr r : -> it
       -> # nothing
       (.remove!)
 
     # Sector lines (at angles)
     render-bind do
-      \.angle-line lines-layer, angles, null
+      \.angle-line lines-layer, game.angles, null
       -> this.append \line
         ..call thinstroke
           ..attr x2 : 0 y2 : 0 class : \angle-line
@@ -317,12 +323,12 @@ render = do
 
       reposition = (duration) ->
         ->
-          height = orbit-heights[it.height]
+          height = game.heights[it.height]
           target = d3.select this
           if duration then target := target.transition!duration duration
           target .attr do
             \transform
-            "rotate(#{rad-to-deg angles[it.angle]})"
+            "rotate(#{rad-to-deg game.angles[it.angle]})"
           target.select \.head .attr \transform "translate(#height)"
 
       # Some SVG path specs for different shapes
@@ -439,12 +445,12 @@ update = do
     dead-charges = []
     dead-creatures = []
     game.charges.map ->
-      it.angle = (it.angle + 1) % angles.length
+      it.angle = (it.angle + 1) % game.n-angles
       it.height += switch it.direction
       | \up   => 1
       | \down => -1
       | _     => 0
-      unless 0 <= it.height < n-orbits
+      unless 0 <= it.height < game.n-heights
         dead-charges.push it
 
       game.creatures.for-each (c) ->
