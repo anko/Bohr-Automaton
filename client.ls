@@ -422,8 +422,12 @@ render = do
               .style fill : creature-col
           rotating-base
             ..each reposition 300
-        ->
-          d3.select this .each reposition game.update-time-step * 0.7
+        (data) ->
+          d3.select this
+            ..select \.head>path
+              .transition!duration game.update-time-step
+              .attr d : shape data.direction
+            ..each reposition game.update-time-step * 0.7
         ->
           outer = this
           outer.select-all \.head
@@ -452,7 +456,7 @@ render = do
           d3.select this
             ..select \.head>path
               .transition!duration game.update-time-step
-              .attr d : -> shape data.direction
+              .attr d : shape data.direction
             ..each reposition game.update-time-step * 0.7
         ->
           outer = this
