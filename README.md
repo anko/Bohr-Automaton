@@ -29,7 +29,7 @@ Written in [LiveScript][8] in a [functional programming][9] style. [SVG][10]-ren
 
 Just `npm install` in the root directory.
 
-You'll need [Node.js][15] and basic UNIX utilities (`make` and `cp`). The game will build itself into `static/`, where you can then run a webserver (e.g. [with Python][16]).
+You'll need [Node.js][15] and basic UNIX utilities (`make` and `cp`). The game will build itself into `static/`, where you can then run a webserver (e.g. [with Python][16]), then open the game in a browser—preferably Chrome or Chromium (mobile is good too).
 
 I haven't tried building it on Windows, but the `makefile` should give you an idea of how to piece together the commands you need to build it yourself. Email me if you get stuck.
 
