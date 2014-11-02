@@ -158,6 +158,29 @@ levels =
     charges:
       * [ 0 1 ]
       ...
+  * n-angles  : 7
+    n-heights : 4
+    creatures:
+      # "Tunnel"
+      * [ 0 0 \up ]
+      * [ 0 1 \up ]
+      * [ 1 2 ]
+      * [ 1 0 \up ]
+      * [ 1 1 \down ]
+      * [ 2 0 ]
+      * [ 2 1 ]
+      # "Tunnel bypass"
+      * [ 2 3 \down ]
+      * [ 4 0 ]
+      * [ 5 0 ]
+      * [ 6 2 \down ]
+      # "Obstruction"
+      * [ 5 1 \up ]
+      * [ 6 3 \down ]
+      * [ 5 2 \up ]
+    charges:
+      * [ 3 3 ]
+      * [ 4 3 ]
 
 levels-completed = {}
 
