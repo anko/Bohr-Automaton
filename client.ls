@@ -290,8 +290,8 @@ render = do
         drag-state.best-pos = null
 
   # This is static, so we only need to append it once
+  planet-radius = 35
   do
-    planet-radius = 35
     # Planet background
     planet-layer.append \circle .attr r : min-orbit-r * 0.8
       .style fill : \white opacity : 0.65
@@ -319,6 +319,26 @@ render = do
 
   # Return actual render method
   (options={}) ->
+
+    do
+      angle-increment = 2 * Math.PI / levels.length
+      radius = 5
+      distance = planet-radius + radius * 1.5
+
+      render-bind do
+        \.level-button planet-layer, levels, null
+        ->
+          this.append \circle
+            .attr class : \level-button r : radius, cx : 0 cy : 0
+            .style fill : planet-col
+            .transition!duration 900
+            .delay (_,i) -> 300 + i * 50
+            .attr do
+              cx : (_,i) -> distance * Math.cos (i * angle-increment)
+              cy : (_,i) -> distance * Math.sin (i * angle-increment)
+        -> # nothing
+        (.remove!)
+
     # Orbit circles
     render-bind do
       \.orbit-circle lines-layer, game.heights, null
