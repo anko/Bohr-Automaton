@@ -55,10 +55,17 @@ height = 500px
 min-orbit-r = 100
 max-orbit-r = 200
 
-# Level generator
-
+# Level definitions
+#
+# Each of the first few levels teaches the player something. Comments describe
+# what that something is intended to be.
+#
 levels =
-  * n-angles  : 3
+  * # Lessons:
+    #  - Press on middle button to start
+    #  - Green things move clockwise
+    #  - Green things can kill multiple reds
+    n-angles  : 3
     n-heights : 1
     creatures :
       * [ 1 0 ]
@@ -66,7 +73,10 @@ levels =
     charges :
       * [ 0 0 ]
       ...
-  * n-angles  : 3
+  * # Lessons:
+    #  - There can be multiple heights
+    #  - You can change where the green things start
+    n-angles  : 3
     n-heights : 2
     creatures:
       * [ 1 1 ]
@@ -74,7 +84,9 @@ levels =
     charges:
       * [ 0 0 ]
       ...
-  * n-angles  : 5
+  * # Lessons:
+    #  - There can be multiple green things
+    n-angles  : 5
     n-heights : 2
     creatures:
       * [ 1 0 ]
