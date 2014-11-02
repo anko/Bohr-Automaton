@@ -25,8 +25,10 @@ load-sfx = (src, volume, cb) ->
       if e then cb e
       else
         if audio-context
-          audio-context.decode-audio-data data.response, ->
-            cb null, new sfx it, volume
+          audio-context.decode-audio-data do
+            data.response
+            -> cb null, new sfx it, volume
+            -> cb null, new sfx null null # Return no-op
         else
           console.log "WebAudio not supported; audio disabled."
           cb null sfx null null # Return no-op
