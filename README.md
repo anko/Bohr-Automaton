@@ -7,6 +7,7 @@ Theme-words: **Heights**, **Automation**, **Destroy**
 ![screenshot][3]
 
 ### [Play it][4] | [Browse code][5]
+(Tested in Chrome/Chromium. Others may have rendering bugs.)
 <br />
 
 It's a web-based puzzle game; inspired by [Niels Bohr][6]'s electron [energy level][7] theory.
@@ -14,11 +15,11 @@ It's a web-based puzzle game; inspired by [Niels Bohr][6]'s electron [energy lev
 
 ## How to play
 
-**Aim**: Destroy red anti-electrons around your atom, by touching them with blue electrons.
+**Aim**: Destroy red anti-electrons around your atom, by touching them with electrons.
 
-**Controls**: Arrange the blue electrons with drag-and-drop, then click the nucleus (center circle) to set them off moving automatically. Click on the nucleus again to reset. To skip between levels, click the little level indicators around the nucleus.
+**Controls**: Arrange the green electrons with drag-and-drop, then click the nucleus (center circle) to set them off moving automatically. Click on the nucleus again to reset. To skip between levels, click the little level indicators around the nucleus.
 
-**Rules**: (The level progression is structured as a tutorial.) Electrons move clockwise along their orbits. Each has a "spin" (direction indicated by icon), which determines whether it stays at the same orbit height (square), rises by one every step (up arrow) or drops by one every step (down arrow). Electrons disappear if they go above the highest orbit or lower than the lowest. When an electron destroys an anti-electron, it absorbs its spin.
+**Rules**: (The levels are tutorial-like, so maybe just play it.) Electrons move clockwise along their orbits. Each has a "spin" (direction indicated by icon), which determines whether it stays at the same orbit height (square), rises by one every step (up arrow) or drops by one every step (down arrow). Electrons disappear if they go above the highest orbit or lower than the lowest. When an electron destroys an anti-electron, it absorbs its spin and starts moving in that way.
 
 
 ## Tech overview
@@ -38,7 +39,7 @@ I haven't tried building it on Windows, but the `makefile` should give you an id
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
 [2]: http://gamedev.stackexchange.com/users/7804/anko
-[3]: https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png
+[3]: https://cloud.githubusercontent.com/assets/5231746/4877072/3c75a0f6-62dc-11e4-8e63-2538a1a4de21.png
 [4]: http://cyan.io/bohr-automaton/
 [5]: https://github.com/anko/Bohr-Automaton
 [6]: http://en.wikipedia.org/wiki/Niels_Bohr
