@@ -121,6 +121,25 @@ levels =
     charges:
       * [ 3 0 ]
       * [ 0 0 ]
+  * # Lessons:
+    #  - Sometimes you can do a lot with just one
+    n-angles  : 9
+    n-heights : 3
+    creatures:
+      * [ 0 0 ]
+      * [ 1 2 \down ]
+      * [ 2 0 \up ]
+      * [ 3 0 ]
+      * [ 3 1 ]
+      * [ 5 0 \up ]
+      * [ 7 0 \up ]
+      * [ 7 1 \up ]
+      * [ 7 2 \down ]
+      * [ 8 1 \down ]
+      * [ 8 2 ]
+    charges:
+      * [ 0 1 ]
+      ...
 
 levels-completed = {}
 
