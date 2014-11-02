@@ -89,7 +89,7 @@ level = ->
     charges:
       * charge 4 0 \down
       * charge 4 1
-    n-angles  : 9
+    n-angles  : 8
     n-heights : 4
   | _ => null
 
@@ -294,11 +294,9 @@ render = do
       -> this .append \circle
         ..attr r : 0 class : \orbit-circle
         ..call thinstroke
-        ..transition!
-          ..duration 1000
-          ..delay (_,i) -> (game.n-heights - i) * 100
-          ..attr r : -> it
-      -> # nothing
+      (_, i) -> d3.select this .transition!duration 1000
+        ..delay ((game.n-heights - i) * 100)
+        ..attr r : -> it
       (.remove!)
 
     # Sector lines (at angles)
@@ -307,12 +305,11 @@ render = do
       -> this.append \line
         ..call thinstroke
           ..attr x2 : 0 y2 : 0 class : \angle-line
-        ..transition!duration 500
-          ..delay (_,i) -> i * 50
-          ..attr do
-            x2 : -> (10 + max-orbit-r) * Math.cos it
-            y2 : -> (10 + max-orbit-r) * Math.sin it
-      -> # nothing
+      (_,i) -> d3.select this .transition!duration 500
+        ..delay i * 50
+        ..attr do
+          x2 : -> (10 + max-orbit-r) * Math.cos it
+          y2 : -> (10 + max-orbit-r) * Math.sin it
       (.remove!)
 
     # Radially moving objects
