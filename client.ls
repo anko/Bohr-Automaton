@@ -71,6 +71,15 @@ level = ->
 
   switch it
   | 0 =>
+    n-angles  : 3
+    n-heights : 1
+    creatures:
+      * creature 1 0
+      * creature 2 0
+    charges:
+      * charge 0 0
+      ...
+  | 1 =>
     creatures:
       * creature 0 0
       * creature 1 1 \down
@@ -81,7 +90,7 @@ level = ->
       * charge 4 2
     n-angles  : 9
     n-heights : 3
-  | 1 =>
+  | 2 =>
     creatures:
       * creature 0 0
       * creature 0 1 \down
@@ -114,8 +123,12 @@ change-level = (n) ->
     incr = 2 * Math.PI / game.n-angles
     [ 0 til game.n-angles ] .map (* incr)
   game.heights = do
-    incr = (max-orbit-r - min-orbit-r) / (game.n-heights - 1)
-    [0 til game.n-heights].map (* incr) .map (+ min-orbit-r)
+
+    switch game.n-heights
+    | 1 => [ ((max-orbit-r + min-orbit-r) / 2) ]
+    | _ =>
+      incr = (max-orbit-r - min-orbit-r) / (game.n-heights - 1)
+      [0 til game.n-heights].map (* incr) .map (+ min-orbit-r)
 
 change-level game.level # Initial
 
