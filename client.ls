@@ -45,7 +45,7 @@ sfx-start!
 
 background-col = \white
 planet-col   = \#00e6c7
-line-col     = \gray
+line-col     = \#ddd
 creature-col = \#c91515
 creature-bg-col = d3.hsl creature-col
   ..l = 0.95
@@ -211,7 +211,7 @@ render = do
     this.style do
       fill : \none
       stroke : d3.hcl line-col
-      "stroke-width" : 0.2
+      "stroke-width" : 1
 
   # Encapsulate the D3 pattern of "enter, update, exit"
   # See [here](http://bost.ocks.org/mike/join/) for more on that.
