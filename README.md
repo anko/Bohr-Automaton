@@ -4,12 +4,12 @@
 
 Theme-words: **Heights**, **Automation**, **Destroy**
 
-![screenshot](https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png)
+![screenshot][3]
 
-### [Play it](http://cyan.io/bohr-automaton/) | [Browse code](https://github.com/anko/Bohr-Automaton)
+### [Play it][4] | [Browse code][5]
 <br />
 
-It's a web-based puzzle game; inspired by [Niels Bohr](http://en.wikipedia.org/wiki/Niels_Bohr)'s electron [energy level](https://en.wikipedia.org/wiki/Energy_level) theory.
+It's a web-based puzzle game; inspired by [Niels Bohr][6]'s electron [energy level][7] theory.
 
 
 ## How to play
@@ -23,18 +23,32 @@ It's a web-based puzzle game; inspired by [Niels Bohr](http://en.wikipedia.org/w
 
 ## Tech overview
 
-Written in [LiveScript](http://livescript.net/) in a [functional programming](http://en.wikipedia.org/wiki/Functional_programming) style. [SVG](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics)-rendered with the [D3.js](http://d3js.org/) data-vis library. Sound effects from [Bfxr](http://www.bfxr.net/), ending jingle rendered in [SunVox](http://www.warmplace.ru/soft/sunvox/), played in the browser (optionally) through [WebAudio](http://webaudio.github.io/web-audio-api/).
+Written in [LiveScript][8] in a [functional programming][9] style. [SVG][10]-rendered with the [D3.js][11] data-vis library. Sound effects from [Bfxr][12], ending jingle rendered in [SunVox][13], played in the browser (optionally) through [WebAudio][14].
 
 ## Compiling/Running
 
-To build it, you'll need Node.js and standard UNIX utilities (`make` and `ln`). Just run `npm install` in the root directory. The site will build itself into `static/`, in which you can then run a webserver (e.g. [with Python](http://stackoverflow.com/questions/7943751/what-is-the-python3-equivalent-of-python-m-simplehttpserver)).
+To build it, you'll need Node.js and standard UNIX utilities (`make` and `ln`). Just run `npm install` in the root directory. The site will build itself into `static/`, in which you can then run a webserver (e.g. [with Python][15].
 
 I haven't tested this on Windows, but if you look at the `makefile` you should be able to piece together what commands you need to run yourself. Email me if you get stuck.
 
 I might get around to putting it online somewhere eventually.
 
-[ISC-licensed](http://en.wikipedia.org/wiki/ISC_license).
+[ISC-licensed][16].
 
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
 [2]: http://gamedev.stackexchange.com/users/7804/anko
+[3]: https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png
+[4]: http://cyan.io/bohr-automaton/
+[5]: https://github.com/anko/Bohr-Automaton
+[6]: http://en.wikipedia.org/wiki/Niels_Bohr
+[7]: https://en.wikipedia.org/wiki/Energy_level
+[8]: http://livescript.net/
+[9]: http://en.wikipedia.org/wiki/Functional_programming
+[10]: http://en.wikipedia.org/wiki/Scalable_Vector_Graphics
+[11]: http://d3js.org/
+[12]: http://www.bfxr.net/
+[13]: http://www.warmplace.ru/soft/sunvox/
+[14]: http://webaudio.github.io/web-audio-api/
+[15]: http://stackoverflow.com/questions/7943751/what-is-the-python3-equivalent-of-python-m-simplehttpserver)
+[16]: http://en.wikipedia.org/wiki/ISC_license
