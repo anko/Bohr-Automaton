@@ -56,8 +56,55 @@ min-orbit-r = 100
 max-orbit-r = 200
 
 # Level generator
-# (It's deterministic; nothing procedural.)
-level = ->
+
+levels =
+  * n-angles  : 3
+    n-heights : 1
+    creatures :
+      * [ 1 0 ]
+      * [ 2 0 ]
+    charges :
+      * [ 0 0 ]
+      ...
+  * n-angles  : 3
+    n-heights : 2
+    creatures:
+      * [ 1 1 ]
+      * [ 2 1 ]
+    charges:
+      * [ 0 0 ]
+      ...
+  * n-angles  : 5
+    n-heights : 2
+    creatures:
+      * [ 1 0 ]
+      * [ 2 1 ]
+    charges:
+      * [ 0 0 ]
+      * [ 3 0 ]
+  * creatures:
+      * [ 0 0 ]
+      * [ 1 1 \down ]
+      * [ 2 2 \up ]
+    charges:
+      * [ 4 0 \down ]
+      * [ 4 1 ]
+      * [ 4 2 ]
+    n-angles  : 9
+    n-heights : 3
+  * creatures:
+      * [ 0 0 ]
+      * [ 0 1 \down ]
+      * [ 2 0 ]
+    charges:
+      * [ 4 0 \down ]
+      * [ 4 1 ]
+    n-angles  : 8
+    n-heights : 4
+
+levels-completed = {}
+
+level = (n) ->
 
   creature = do
     id = 0
@@ -69,56 +116,11 @@ level = ->
     (angle, height, direction=\none) ->
       { angle, height, direction, id : id++ }
 
-  switch it
-  | 0 =>
-    n-angles  : 3
-    n-heights : 1
-    creatures:
-      * creature 1 0
-      * creature 2 0
-    charges:
-      * charge 0 0
-      ...
-  | 1 =>
-    n-angles  : 3
-    n-heights : 2
-    creatures:
-      * creature 1 1
-      * creature 2 1
-    charges:
-      * charge 0 0
-      ...
-  | 2 =>
-    n-angles  : 5
-    n-heights : 2
-    creatures:
-      * creature 1 0
-      * creature 2 1
-    charges:
-      * charge 0 0
-      * charge 3 0
-  | 3 =>
-    creatures:
-      * creature 0 0
-      * creature 1 1 \down
-      * creature 2 2 \up
-    charges:
-      * charge 4 0 \down
-      * charge 4 1
-      * charge 4 2
-    n-angles  : 9
-    n-heights : 3
-  | 4 =>
-    creatures:
-      * creature 0 0
-      * creature 0 1 \down
-      * creature 2 0
-    charges:
-      * charge 4 0 \down
-      * charge 4 1
-    n-angles  : 8
-    n-heights : 4
-  | _ => null
+  return unless levels[n]
+
+  ^^levels[n]
+    ..creatures .= map -> creature.apply null, it
+    ..charges   .= map -> charge  .apply null, it
 
 # Game state object; holds things that change.
 game =
@@ -181,11 +183,13 @@ render = do
       ..exit!call exit
 
   # Enforce stacking order
-  lines-layer    = game-svg.append \g
-  creature-layer = game-svg.append \g
-  charge-layer   = game-svg.append \g
-  planet-layer   = game-svg.append \g
-  drag-layer     = game-svg.append \g
+  lines-layer             = game-svg.append \g
+  creature-layer          = game-svg.append \g
+  charge-layer            = game-svg.append \g
+  planet-background-layer = game-svg.append \g
+  level-indicator-layer   = game-svg.append \g
+  planet-layer            = game-svg.append \g
+  drag-layer              = game-svg.append \g
 
   drag-charge = do
 
@@ -289,11 +293,11 @@ render = do
           .remove!
         drag-state.best-pos = null
 
-  # This is static, so we only need to append it once
+  # These are static, so we only need to append them once
+  planet-radius = 35
   do
-    planet-radius = 35
     # Planet background
-    planet-layer.append \circle .attr r : min-orbit-r * 0.8
+    planet-background-layer.append \circle .attr r : min-orbit-r * 0.8
       .style fill : \white opacity : 0.65
     # Main planet
     planet-layer.append \circle .attr cx : 0 cy : 0 r : planet-radius
@@ -319,6 +323,29 @@ render = do
 
   # Return actual render method
   (options={}) ->
+
+    do
+      angle-increment = 2 * Math.PI / levels.length
+      radius = 3
+      distance = planet-radius + radius * 5
+
+      render-bind do
+        \.level-button level-indicator-layer, levels, null
+        ->
+          this.append \circle
+            .attr class : \level-button r : radius, cx : 0 cy : 0
+            .style fill : \none, "stroke-width" : 0.5, stroke : planet-col
+            .transition!duration 900
+            .delay (_,i) -> 300 + i * 50
+            .attr do
+              cx : (_,i) -> distance * Math.cos (i * angle-increment)
+              cy : (_,i) -> distance * Math.sin (i * angle-increment)
+        (_,i) ->
+          if levels-completed[i]
+            d3.select this
+              .style fill : planet-col
+        (.remove!)
+
     # Orbit circles
     render-bind do
       \.orbit-circle lines-layer, game.heights, null
@@ -530,6 +557,7 @@ fail-level = (options={}) ->
 
 complete-level = ->
   return if game.state isnt \running
+  levels-completed[game.level] = true
   if level game.level + 1 ?
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
