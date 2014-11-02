@@ -183,11 +183,13 @@ render = do
       ..exit!call exit
 
   # Enforce stacking order
-  lines-layer    = game-svg.append \g
-  creature-layer = game-svg.append \g
-  charge-layer   = game-svg.append \g
-  planet-layer   = game-svg.append \g
-  drag-layer     = game-svg.append \g
+  lines-layer             = game-svg.append \g
+  creature-layer          = game-svg.append \g
+  charge-layer            = game-svg.append \g
+  planet-background-layer = game-svg.append \g
+  level-indicator-layer   = game-svg.append \g
+  planet-layer            = game-svg.append \g
+  drag-layer              = game-svg.append \g
 
   drag-charge = do
 
@@ -291,11 +293,11 @@ render = do
           .remove!
         drag-state.best-pos = null
 
-  # This is static, so we only need to append it once
+  # These are static, so we only need to append them once
   planet-radius = 35
   do
     # Planet background
-    planet-layer.append \circle .attr r : min-orbit-r * 0.8
+    planet-background-layer.append \circle .attr r : min-orbit-r * 0.8
       .style fill : \white opacity : 0.65
     # Main planet
     planet-layer.append \circle .attr cx : 0 cy : 0 r : planet-radius
@@ -328,7 +330,7 @@ render = do
       distance = planet-radius + radius * 5
 
       render-bind do
-        \.level-button planet-layer, levels, null
+        \.level-button level-indicator-layer, levels, null
         ->
           this.append \circle
             .attr class : \level-button r : radius, cx : 0 cy : 0
