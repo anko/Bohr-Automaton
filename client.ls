@@ -94,16 +94,19 @@ levels =
     charges:
       * [ 0 0 ]
       * [ 3 0 ]
-  * creatures:
+  * # Lessons:
+    #  - Things with arrows imply switching higher or lower
+    #  - The height-modifier is persistent until touching something else
+    n-angles  : 4
+    n-heights : 5
+    creatures:
+      * [ 0 4 \down ]
       * [ 0 0 ]
-      * [ 1 1 \down ]
-      * [ 2 2 \up ]
+      * [ 1 0 ]
+      * [ 2 0 ]
     charges:
-      * [ 4 0 \down ]
-      * [ 4 1 ]
-      * [ 4 2 ]
-    n-angles  : 9
-    n-heights : 3
+      * [ 0 1 ]
+      ...
   * creatures:
       * [ 0 0 ]
       * [ 0 1 \down ]
