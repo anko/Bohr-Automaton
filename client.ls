@@ -56,8 +56,53 @@ min-orbit-r = 100
 max-orbit-r = 200
 
 # Level generator
-# (It's deterministic; nothing procedural.)
-level = ->
+
+levels =
+  * n-angles  : 3
+    n-heights : 1
+    creatures :
+      * [ 1 0 ]
+      * [ 2 0 ]
+    charges :
+      * [ 0 0 ]
+      ...
+  * n-angles  : 3
+    n-heights : 2
+    creatures:
+      * [ 1 1 ]
+      * [ 2 1 ]
+    charges:
+      * [ 0 0 ]
+      ...
+  * n-angles  : 5
+    n-heights : 2
+    creatures:
+      * [ 1 0 ]
+      * [ 2 1 ]
+    charges:
+      * [ 0 0 ]
+      * [ 3 0 ]
+  * creatures:
+      * [ 0 0 ]
+      * [ 1 1 \down ]
+      * [ 2 2 \up ]
+    charges:
+      * [ 4 0 \down ]
+      * [ 4 1 ]
+      * [ 4 2 ]
+    n-angles  : 9
+    n-heights : 3
+  * creatures:
+      * [ 0 0 ]
+      * [ 0 1 \down ]
+      * [ 2 0 ]
+    charges:
+      * [ 4 0 \down ]
+      * [ 4 1 ]
+    n-angles  : 8
+    n-heights : 4
+
+level = (n) ->
 
   creature = do
     id = 0
@@ -69,56 +114,11 @@ level = ->
     (angle, height, direction=\none) ->
       { angle, height, direction, id : id++ }
 
-  switch it
-  | 0 =>
-    n-angles  : 3
-    n-heights : 1
-    creatures:
-      * creature 1 0
-      * creature 2 0
-    charges:
-      * charge 0 0
-      ...
-  | 1 =>
-    n-angles  : 3
-    n-heights : 2
-    creatures:
-      * creature 1 1
-      * creature 2 1
-    charges:
-      * charge 0 0
-      ...
-  | 2 =>
-    n-angles  : 5
-    n-heights : 2
-    creatures:
-      * creature 1 0
-      * creature 2 1
-    charges:
-      * charge 0 0
-      * charge 3 0
-  | 3 =>
-    creatures:
-      * creature 0 0
-      * creature 1 1 \down
-      * creature 2 2 \up
-    charges:
-      * charge 4 0 \down
-      * charge 4 1
-      * charge 4 2
-    n-angles  : 9
-    n-heights : 3
-  | 4 =>
-    creatures:
-      * creature 0 0
-      * creature 0 1 \down
-      * creature 2 0
-    charges:
-      * charge 4 0 \down
-      * charge 4 1
-    n-angles  : 8
-    n-heights : 4
-  | _ => null
+  return unless levels[n]
+
+  ^^levels[n]
+    ..creatures .= map -> creature.apply null, it
+    ..charges   .= map -> charge  .apply null, it
 
 # Game state object; holds things that change.
 game =
