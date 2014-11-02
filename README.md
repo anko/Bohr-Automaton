@@ -2,7 +2,9 @@
 
 ([GDSE GameJam 2014][1] submission from [Anko][2])
 
-*Theme-words: Explosions, HYPER-challenging, Heights, Automation, Destroy*
+Theme-words: **Heights**, **Automation**, **Destroy**
+
+![screenshot](https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png)
 
 It's a web-based puzzle game.
 
