@@ -6,7 +6,7 @@ Theme-words: **Heights**, **Automation**, **Destroy**
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png)
 
-It's a web-based puzzle game.
+Web-based puzzle game; inspired by [Niels Bohr](http://en.wikipedia.org/wiki/Niels_Bohr)'s electron [energy level](https://en.wikipedia.org/wiki/Energy_level) theory.
 
 ## How to play
 
@@ -23,7 +23,7 @@ To reset a level, click on the nucleus.
 
 ## Tech overview
 
-Written in [LiveScript](http://livescript.net/) in a [functional programming](http://en.wikipedia.org/wiki/Functional_programming) style. [SVG](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics)-rendered with the [D3.js](http://d3js.org/) data-vis library. The sounds are from [Bfxr](http://www.bfxr.net/) and played (optionally) through [WebAudio](http://webaudio.github.io/web-audio-api/).
+Written in [LiveScript](http://livescript.net/) in a [functional programming](http://en.wikipedia.org/wiki/Functional_programming) style. [SVG](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics)-rendered with the [D3.js](http://d3js.org/) data-vis library. Sound effects from [Bfxr](http://www.bfxr.net/), ending jingle rendered in [SunVox](http://www.warmplace.ru/soft/sunvox/), played in the browser (optionally) through [WebAudio](http://webaudio.github.io/web-audio-api/).
 
 ## Compiling/Running
 
