@@ -80,6 +80,24 @@ level = ->
       * charge 0 0
       ...
   | 1 =>
+    n-angles  : 3
+    n-heights : 2
+    creatures:
+      * creature 1 1
+      * creature 2 1
+    charges:
+      * charge 0 0
+      ...
+  | 2 =>
+    n-angles  : 5
+    n-heights : 2
+    creatures:
+      * creature 1 0
+      * creature 2 1
+    charges:
+      * charge 0 0
+      * charge 3 0
+  | 3 =>
     creatures:
       * creature 0 0
       * creature 1 1 \down
@@ -90,7 +108,7 @@ level = ->
       * charge 4 2
     n-angles  : 9
     n-heights : 3
-  | 2 =>
+  | 4 =>
     creatures:
       * creature 0 0
       * creature 0 1 \down
