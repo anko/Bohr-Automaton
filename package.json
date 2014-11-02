@@ -10,7 +10,8 @@
   "files": [
       "static",
       "sfx",
-      "README.md"
+      "README.md",
+      "LICENSE"
   ],
   "author": "An <an@cyan.io>",
   "license": "ISC",

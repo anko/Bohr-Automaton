@@ -33,6 +33,8 @@ I haven't tested this on Windows, but if you look at the `makefile` you should b
 
 I might get around to putting it online somewhere eventually.
 
+[ISC-licensed](http://en.wikipedia.org/wiki/ISC_license).
+
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
 [2]: http://gamedev.stackexchange.com/users/7804/anko
