@@ -1,6 +1,6 @@
 # Bohr automaton
 
-([GDSE GameJam 2014][1] submission from [Anko][2])
+([GDSE GameJam 2014][1] submission from [Anko][2]; written in 3 days)
 
 Theme-words: **Heights**, **Automation**, **Destroy**
 
@@ -26,6 +26,8 @@ It's a web-based puzzle game; inspired by [Niels Bohr][6]'s electron [energy lev
 
 Written in [LiveScript][8] in a [functional programming][9] style. [SVG][10]-rendered with the [D3.js][11] data-vis library. Sound effects from [Bfxr][12], ending jingle rendered in [SunVox][13], played in the browser (optionally) through [WebAudio][14].
 
+The `client.ls`-file contains all the interesting parts. I tried to keep it legible and commented, but there's only so much you can do in a weekend. :)
+
 ## Compiling/Running
 
 Just `npm install` in the root directory.
@@ -34,7 +36,9 @@ You'll need [Node.js][15] and basic UNIX utilities (`make` and `cp`). The game w
 
 I haven't tried building it on Windows, but the `makefile` should give you an idea of how to piece together the commands you need to build it yourself. Email me if you get stuck.
 
-[ISC-licensed][17].
+If you're on a UNIX-like with `inotify`-support in your kernel (newest Linuxes do), then `make watch` is a handy helper: It waits for changes to the LiveScript code and recompiles it to JavaScript automatically whenever the file changes.
+
+License is [ISC][17].
 
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
