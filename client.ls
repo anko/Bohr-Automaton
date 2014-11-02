@@ -107,15 +107,6 @@ levels =
     charges:
       * [ 0 1 ]
       ...
-  * creatures:
-      * [ 0 0 ]
-      * [ 0 1 \down ]
-      * [ 2 0 ]
-    charges:
-      * [ 4 0 \down ]
-      * [ 4 1 ]
-    n-angles  : 8
-    n-heights : 4
 
 levels-completed = {}
 
@@ -148,24 +139,6 @@ game =
   n-heights : 0
   angles  : []
   heights : []
-
-change-level = (n) ->
-  game.creatures = level n .creatures
-  game.charges   = level n .charges
-  game.n-angles  = level n .n-angles
-  game.n-heights = level n .n-heights
-  game.angles = do
-    incr = 2 * Math.PI / game.n-angles
-    [ 0 til game.n-angles ] .map (* incr)
-  game.heights = do
-
-    switch game.n-heights
-    | 1 => [ ((max-orbit-r + min-orbit-r) / 2) ]
-    | _ =>
-      incr = (max-orbit-r - min-orbit-r) / (game.n-heights - 1)
-      [0 til game.n-heights].map (* incr) .map (+ min-orbit-r)
-
-change-level game.level # Initial
 
 # Game frame SVG, with origin set to centre
 game-svg = d3.select \body .select \#game
@@ -543,6 +516,31 @@ update = do
     if empty game.charges
       return fail-level!
 
+change-level = (n) ->
+
+  game.creatures = level n .creatures
+  game.charges   = level n .charges
+  game.n-angles  = level n .n-angles
+  game.n-heights = level n .n-heights
+  game.angles = do
+    incr = 2 * Math.PI / game.n-angles
+    [ 0 til game.n-angles ] .map (* incr)
+  game.heights = do
+
+    switch game.n-heights
+    | 1 => [ ((max-orbit-r + min-orbit-r) / 2) ]
+    | _ =>
+      incr = (max-orbit-r - min-orbit-r) / (game.n-heights - 1)
+      [0 til game.n-heights].map (* incr) .map (+ min-orbit-r)
+
+  render { +initial, +allow-drag }
+  game.state = \none
+
+window.change-level = (n) -> # For skipping levels in development
+  change-level (game.level = n)
+
+change-level game.level # Initial
+
 var upd-interval
 start-action = ->
   return if game.state is \running
@@ -566,8 +564,6 @@ fail-level = (options={}) ->
     ->
       console.log "Restarting level"
       change-level game.level
-      render { +initial, +allow-drag }
-      game.state = \none
     if options.delay? then options.delay else 1000
 
 complete-level = ->
@@ -582,8 +578,6 @@ complete-level = ->
       ->
         sfx-success!
         change-level ++game.level
-        render { +initial, +allow-drag }
-        game.state = \none
       1000
   else
     console.log "YOU WIN THE GAME!"
