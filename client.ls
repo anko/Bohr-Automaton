@@ -39,6 +39,7 @@ e, sfx-touch   <- load-sfx \touch.wav   1.2
 
 sfx-start!
 
+background-col = \white
 planet-col   = \#00e6c7
 line-col     = \gray
 creature-col = \#c91515
@@ -182,7 +183,7 @@ game-svg = d3.select \body .select \#game
 
 # Control actions to influence game state
 var start-action, stop-action
-var fail-level, complete-level
+var fail-level, complete-level, change-level
 
 render = do
 
@@ -347,7 +348,7 @@ render = do
 
     do
       angle-increment = 2 * Math.PI / levels.length
-      radius = 3
+      radius = 4
       distance = planet-radius + radius * 5
 
       render-bind do
@@ -355,16 +356,35 @@ render = do
         ->
           this.append \circle
             .attr class : \level-button r : radius, cx : 0 cy : 0
-            .style fill : \none, "stroke-width" : 0.5, stroke : planet-col
+            .style do
+              fill : background-col
+              "stroke-width" : 0.5
+              stroke : planet-col
+            .on \mouseover ->
+              d3.select this
+                .transition!duration 100
+                .attr \r radius * 3
+            .on \mouseout ->
+              d3.select this
+                .transition!duration 100
+                .attr \r radius
+            .on \click (_, i) ->
+              stop-action!
+              game.level = i
+              change-level i
             .transition!duration 900
             .delay (_,i) -> 300 + i * 50
             .attr do
               cx : (_,i) -> distance * Math.cos (i * angle-increment)
               cy : (_,i) -> distance * Math.sin (i * angle-increment)
+
         (_,i) ->
           if levels-completed[i]
             d3.select this
               .style fill : planet-col
+          else
+            d3.select this
+              .style fill : background-col
         (.remove!)
 
     # Orbit circles
