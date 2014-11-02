@@ -5,6 +5,7 @@ js-bundle = \bundle.js
 
 page = whatxml \html
   .. \head
+    ..self-closing \meta name : \viewport content : "width=device-width"
     .. \title ._ "Bohr automaton"
     ..self-closing \link rel : \stylesheet  type : \text/css href : \main.css
   .. \body
