@@ -107,6 +107,20 @@ levels =
     charges:
       * [ 0 1 ]
       ...
+  * # Lessons:
+    #  - You might have to clear a path for another blue thing
+    n-angles  : 6
+    n-heights : 3
+    creatures:
+      * [ 0 2 ]
+      * [ 1 1 ]
+      * [ 2 1 \up ]
+      * [ 3 2 \up ]
+      * [ 4 2 \down ]
+      * [ 5 1 ]
+    charges:
+      * [ 3 0 ]
+      * [ 0 0 ]
 
 levels-completed = {}
 
