@@ -101,16 +101,29 @@ levels =
       * [ 3 0 ]
   * # Lessons:
     #  - Things with arrows imply switching higher or lower
-    #  - The height-modifier is persistent until touching something else
     n-angles  : 4
+    n-heights : 3
+    creatures:
+      * [ 1 0 ]
+      * [ 2 0 ]
+      * [ 3 0 ]
+      * [ 0 1 \down ]
+    charges:
+      * [ 0 2 ]
+      ...
+  * # Lessons:
+    #  - The height-modifier is persistent until touching something else
+    #  - Things can get dizzy
+    n-angles  : 5
     n-heights : 5
     creatures:
       * [ 0 4 \down ]
       * [ 0 0 ]
       * [ 1 0 ]
       * [ 2 0 ]
+      * [ 4 0 ]
     charges:
-      * [ 0 1 ]
+      * [ 3 0 ]
       ...
   * # Lessons:
     #  - You might have to clear a path for another blue thing
