@@ -1,19 +1,35 @@
-# [GDSE GameJam 2014][1] submission from [anko][2]
+# Bohr automaton
 
-*Theme: Explosions, HYPER-challenging, Heights, Automation, Destroy*
+([GDSE GameJam 2014][1] submission from [Anko][2])
 
-I'll put a compiled version up somewhere, sometime.
+*Theme-words: Explosions, HYPER-challenging, Heights, Automation, Destroy*
 
-## Building / hacking
+It's a web-based puzzle game.
 
-If you want to hack and compile it yourself, you'll need
-[Node.js](http://nodejs.org/).  Just run `npm install` in the root of this
-project to install all dependencies into `node_modules` (don't worry, there are
-no system-level dependencies other than Node) and compile the game into
-`static/`. (Running `make all` is equivalent.)
+## How to play
 
-Then run a web server in `static` and point your browser at it.
+Your aim is to destroy all red anti-electrons around your atom, by touching them with blue electrons in orbit.
 
+Arrange the blue electrons with drag-and-drop, then click the nucleus (center circle) to set them off moving automatically. 
+
+Electrons move clockwise along their orbits. Each also has a "spin" (direction indicated by icon), which determines whether it stays at the same orbit height (square), rises by one every step (up arrow) or drops by one every step (down arrow). Electrons disappear if they go above the highest orbit or lower than the lowest.
+
+When an electron destroys an anti-electron, it absorbs its spin.
+
+To reset a level, click on the nucleus.
+
+
+## Tech overview
+
+Written in [LiveScript](http://livescript.net/) in a [functional programming](http://en.wikipedia.org/wiki/Functional_programming) style. [SVG](http://en.wikipedia.org/wiki/Scalable_Vector_Graphics)-rendered with the [D3.js](http://d3js.org/) data-vis library. The sounds are from [Bfxr](http://www.bfxr.net/) and played (optionally) through [WebAudio](http://webaudio.github.io/web-audio-api/).
+
+## Compiling/Running
+
+To build it, you'll need Node.js and standard UNIX utilities (`make` and `ln`). Just run `npm install` in the root directory. The site will build itself into `static/`, in which you can then run a webserver (e.g. [with Python](http://stackoverflow.com/questions/7943751/what-is-the-python3-equivalent-of-python-m-simplehttpserver)).
+
+I haven't tested this on Windows, but if you look at the `makefile` you should be able to piece together what commands you need to run yourself. Email me if you get stuck.
+
+I might get around to putting it online somewhere eventually.
 
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
