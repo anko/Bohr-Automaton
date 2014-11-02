@@ -6,19 +6,19 @@ Theme-words: **Heights**, **Automation**, **Destroy**
 
 ![screenshot](https://cloud.githubusercontent.com/assets/5231746/4873861/a2a70a3e-622a-11e4-953b-3ed302c79b13.png)
 
-Web-based puzzle game; inspired by [Niels Bohr](http://en.wikipedia.org/wiki/Niels_Bohr)'s electron [energy level](https://en.wikipedia.org/wiki/Energy_level) theory.
+### [Play it](http://cyan.io/bohr-automaton/) | [Browse code](https://github.com/anko/Bohr-Automaton)
+<br />
+
+It's a web-based puzzle game; inspired by [Niels Bohr](http://en.wikipedia.org/wiki/Niels_Bohr)'s electron [energy level](https://en.wikipedia.org/wiki/Energy_level) theory.
+
 
 ## How to play
 
-Your aim is to destroy all red anti-electrons around your atom, by touching them with blue electrons in orbit.
+**Aim**: Destroy red anti-electrons around your atom, by touching them with blue electrons.
 
-Arrange the blue electrons with drag-and-drop, then click the nucleus (center circle) to set them off moving automatically. 
+**Controls**: Arrange the blue electrons with drag-and-drop, then click the nucleus (center circle) to set them off moving automatically. Click on the nucleus again to reset. To skip between levels, click the little level indicators around the nucleus.
 
-Electrons move clockwise along their orbits. Each also has a "spin" (direction indicated by icon), which determines whether it stays at the same orbit height (square), rises by one every step (up arrow) or drops by one every step (down arrow). Electrons disappear if they go above the highest orbit or lower than the lowest.
-
-When an electron destroys an anti-electron, it absorbs its spin.
-
-To reset a level, click on the nucleus.
+**Rules**: (The level progression is structured as a tutorial.) Electrons move clockwise along their orbits. Each has a "spin" (direction indicated by icon), which determines whether it stays at the same orbit height (square), rises by one every step (up arrow) or drops by one every step (down arrow). Electrons disappear if they go above the highest orbit or lower than the lowest. When an electron destroys an anti-electron, it absorbs its spin.
 
 
 ## Tech overview
