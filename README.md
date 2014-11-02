@@ -1,6 +1,6 @@
 # Bohr automaton
 
-([GDSE GameJam 2014][1] submission from [Anko][2]; written in 3 days)
+([GDSE Anniversary Game Jam 2014][1] submission from [Anko][2]; written in 3 days)
 
 Theme-words: **Heights**, **Automation**, **Destroy**
 
