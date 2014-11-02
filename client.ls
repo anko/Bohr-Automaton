@@ -39,7 +39,7 @@ e, sfx-nope    <- load-sfx \nope.wav    1
 e, sfx-success <- load-sfx \success.wav 0.7
 e, sfx-touch   <- load-sfx \touch.wav   1.2
 e, sfx-change  <- load-sfx \change.wav  0.8
-e, sfx-win     <- load-sfx \win.mp3     0.8
+e, sfx-win     <- load-sfx \win.mp3     1.2
 
 sfx-start!
 
