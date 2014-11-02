@@ -102,6 +102,8 @@ levels =
     n-angles  : 8
     n-heights : 4
 
+levels-completed = {}
+
 level = (n) ->
 
   creature = do
@@ -322,21 +324,24 @@ render = do
 
     do
       angle-increment = 2 * Math.PI / levels.length
-      radius = 5
-      distance = planet-radius + radius * 1.5
+      radius = 3
+      distance = planet-radius + radius * 5
 
       render-bind do
         \.level-button planet-layer, levels, null
         ->
           this.append \circle
             .attr class : \level-button r : radius, cx : 0 cy : 0
-            .style fill : planet-col
+            .style fill : \none, "stroke-width" : 0.5, stroke : planet-col
             .transition!duration 900
             .delay (_,i) -> 300 + i * 50
             .attr do
               cx : (_,i) -> distance * Math.cos (i * angle-increment)
               cy : (_,i) -> distance * Math.sin (i * angle-increment)
-        -> # nothing
+        (_,i) ->
+          if levels-completed[i]
+            d3.select this
+              .style fill : planet-col
         (.remove!)
 
     # Orbit circles
@@ -550,6 +555,7 @@ fail-level = (options={}) ->
 
 complete-level = ->
   return if game.state isnt \running
+  levels-completed[game.level] = true
   if level game.level + 1 ?
     # Next level exists
     console.log "LEVEL #{game.level} COMPLETE!"
