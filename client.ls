@@ -37,6 +37,7 @@ e, sfx-nope    <- load-sfx \nope.wav    1
 e, sfx-success <- load-sfx \success.wav 0.7
 e, sfx-touch   <- load-sfx \touch.wav   1.2
 e, sfx-change  <- load-sfx \change.wav  0.8
+e, sfx-win     <- load-sfx \win.mp3     0.8
 
 sfx-start!
 
@@ -626,18 +627,36 @@ fail-level = (options={}) ->
       change-level game.level
     if options.delay? then options.delay else 1000
 
+first-incomplete-level = ->
+  find do
+    (not levels-completed.)
+    [ 0 til levels.length ]
+
 complete-level = ->
   return if game.state isnt \running
   levels-completed[game.level] = true
-  if level game.level + 1 ?
+  console.log "LEVEL #{game.level} COMPLETE!"
+  stop-action!
+  game.state = \loading
+  if levels[ game.level + 1 ]? and not levels-completed[ game.level + 1 ]
     # Next level exists
-    console.log "LEVEL #{game.level} COMPLETE!"
-    stop-action!
-    game.state = \loading
     set-timeout do
       ->
         sfx-success!
         change-level ++game.level
       1000
   else
-    console.log "YOU WIN THE GAME!"
+    still-incomplete = first-incomplete-level!
+    if still-incomplete?
+
+      # Another incomplete level still exists
+      set-timeout do
+        ->
+          sfx-success!
+          game.level = still-incomplete
+          change-level still-incomplete
+        1000
+    else
+      console.log "YOU WIN THE GAME!"
+      sfx-win!
+      render { +enable-drag }

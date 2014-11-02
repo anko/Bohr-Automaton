@@ -10,13 +10,14 @@ html: page.ls
 	./page.ls > static/index.html
 css: main.css
 	myth main.css > static/main.css
-sfx : sfx/start.wav sfx/blop.wav sfx/nope.wav sfx/success.wav sfx/touch.wav sfx/change.wav
+sfx : sfx/start.wav sfx/blop.wav sfx/nope.wav sfx/success.wav sfx/touch.wav sfx/change.wav sfx/win.mp3
 	ln --force --relative --symbolic sfx/start.wav static/
 	ln --force --relative --symbolic sfx/blop.wav static/
 	ln --force --relative --symbolic sfx/nope.wav static/
 	ln --force --relative --symbolic sfx/success.wav static/
 	ln --force --relative --symbolic sfx/touch.wav static/
 	ln --force --relative --symbolic sfx/change.wav static/
+	ln --force --relative --symbolic sfx/win.mp3 static/
 
 serve: all
 	cd static; $(WEBSERVER)
