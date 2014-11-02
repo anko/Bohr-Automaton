@@ -27,13 +27,13 @@ Written in [LiveScript][8] in a [functional programming][9] style. [SVG][10]-ren
 
 ## Compiling/Running
 
-To build it, you'll need Node.js and standard UNIX utilities (`make` and `ln`). Just run `npm install` in the root directory. The site will build itself into `static/`, in which you can then run a webserver (e.g. [with Python][15].
+Just `npm install` in the root directory.
 
-I haven't tested this on Windows, but if you look at the `makefile` you should be able to piece together what commands you need to run yourself. Email me if you get stuck.
+You'll need [Node.js][15] and basic UNIX utilities (`make` and `cp`). The game will build itself into `static/`, where you can then run a webserver (e.g. [with Python][16]).
 
-I might get around to putting it online somewhere eventually.
+I haven't tried building it on Windows, but the `makefile` should give you an idea of how to piece together the commands you need to build it yourself. Email me if you get stuck.
 
-[ISC-licensed][16].
+[ISC-licensed][17].
 
 
 [1]: http://meta.gamedev.stackexchange.com/questions/1794/anniversary-game-jam-2014
@@ -50,5 +50,6 @@ I might get around to putting it online somewhere eventually.
 [12]: http://www.bfxr.net/
 [13]: http://www.warmplace.ru/soft/sunvox/
 [14]: http://webaudio.github.io/web-audio-api/
-[15]: http://stackoverflow.com/questions/7943751/what-is-the-python3-equivalent-of-python-m-simplehttpserver)
-[16]: http://en.wikipedia.org/wiki/ISC_license
+[15]: http://nodejs.org/
+[16]: http://stackoverflow.com/questions/7943751/what-is-the-python3-equivalent-of-python-m-simplehttpserver)
+[17]: http://en.wikipedia.org/wiki/ISC_license
